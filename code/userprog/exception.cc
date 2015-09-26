@@ -106,7 +106,7 @@ ExceptionHandler(ExceptionType which)
 	  		kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
 	  
 	 		/* set next programm counter for brach execution */
-	 		kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
+	 	        kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
 			}
 			cout << "result is " << result << "\n";	
 			return;	
@@ -118,6 +118,26 @@ ExceptionHandler(ExceptionType which)
             cout << "return value:" << val << endl;
 			kernel->currentThread->Finish();
             break;
+                case SC_PrintInt:
+                {
+                   int num;
+                   num = kernel->machine->ReadRegister(4);
+                   DEBUG(dbgSys, "Num :" << num << "\n");
+                   SysPrintInt(num);  
+		  /* Modify return point */
+		  {
+	  	  /* set previous programm counter (debugging only)*/
+	  	  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+	  			
+		  /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+	  	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+	  
+	 	  /* set next programm counter for brach execution */
+	 	  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
+		  }
+                  return;
+                  ASSERTNOTREACHED();
+                }
       	default:
 			cerr << "Unexpected system call " << type << "\n";
 			break;

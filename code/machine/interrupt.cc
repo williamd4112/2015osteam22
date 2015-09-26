@@ -331,6 +331,15 @@ Interrupt::CheckIfDue(bool advanceClock)
 }
 
 //----------------------------------------------------------------------
+// Interrupt: PrintInt
+//
+//----------------------------------------------------------------------
+void
+Interrupt::PrintInt(int num){
+   //kernel->synchConsoleOut->PutChar('e');   
+}
+
+//----------------------------------------------------------------------
 // PrintPending
 // 	Print information about an interrupt that is scheduled to occur.
 //	When, where, why, etc.

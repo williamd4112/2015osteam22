@@ -36,6 +36,7 @@
 #define SC_ThreadJoin   15
 #define SC_Add		42
 #define SC_MSG		100
+#define SC_PrintInt     101
 
 #ifndef IN_ASM
 
@@ -176,6 +177,11 @@ int ThreadJoin(ThreadId id);
  * Deletes current thread and returns ExitCode to every waiting lokal thread.
  */
 void ThreadExit(int ExitCode);	
+
+/*
+ * Custom System Call: void PrintInt(int num)
+ */
+void PrintInt(int num);
 
 #endif /* IN_ASM */
 
