@@ -132,8 +132,8 @@ AddrSpace::Load(char *fileName)
 			+ UserStackSize;	// we need to increase the size
 						// to leave room for the stack
 #endif
-    numPages = divRoundUp(size, PageSize);
-    size = numPages * PageSize;
+    numPages = divRoundUp(size, PageSize);      // number of pages
+    size = numPages * PageSize;                 // internal hole will be
 
     ASSERT(numPages <= NumPhysPages);		// check we're not trying
 						// to run anything too big --
@@ -147,6 +147,7 @@ AddrSpace::Load(char *fileName)
     if (noffH.code.size > 0) {
         DEBUG(dbgAddr, "Initializing code segment.");
 	DEBUG(dbgAddr, noffH.code.virtualAddr << ", " << noffH.code.size);
+        
         executable->ReadAt(
 		&(kernel->machine->mainMemory[noffH.code.virtualAddr]), 
 			noffH.code.size, noffH.code.inFileAddr);
@@ -154,6 +155,7 @@ AddrSpace::Load(char *fileName)
     if (noffH.initData.size > 0) {
         DEBUG(dbgAddr, "Initializing data segment.");
 	DEBUG(dbgAddr, noffH.initData.virtualAddr << ", " << noffH.initData.size);
+        
         executable->ReadAt(
 		&(kernel->machine->mainMemory[noffH.initData.virtualAddr]),
 			noffH.initData.size, noffH.initData.inFileAddr);

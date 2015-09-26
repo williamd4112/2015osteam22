@@ -13,9 +13,6 @@
 
 #include "kernel.h"
 
-#include "synchconsole.h"
-
-
 void SysHalt()
 {
   kernel->interrupt->Halt();
@@ -36,8 +33,8 @@ int SysCreate(char *filename)
 
 void SysPrintInt(int num)
 {
-   kernel->synchConsoleOut->PutChar('e');
-   //kernel->interrupt->PrintInt(num);
+   //kernel->synchConsoleOut->PutChar('e');
+   kernel->interrupt->PrintInt(num);
 }
 
 

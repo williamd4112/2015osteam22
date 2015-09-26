@@ -23,6 +23,7 @@
 #include "copyright.h"
 #include "interrupt.h"
 #include "main.h"
+#include "synchconsole.h"
 
 // String definitions for debugging messages
 
@@ -159,7 +160,6 @@ Interrupt::OneTick()
 	stats->userTicks += UserTick;
     }
     DEBUG(dbgInt, "== Tick " << stats->totalTicks << " ==");
-
 // check any pending interrupts are now ready to fire
     ChangeLevel(IntOn, IntOff);	// first, turn off interrupts
 				// (interrupt handlers run with
@@ -296,9 +296,11 @@ Interrupt::CheckIfDue(bool advanceClock)
     if (debug->IsEnabled(dbgInt)) {
 	DumpState();
     }
+
     if (pending->IsEmpty()) {   	// no pending interrupts
 	return FALSE;	
-    }		
+    }
+
     next = pending->Front();
 
     if (next->when > stats->totalTicks) {
@@ -336,7 +338,7 @@ Interrupt::CheckIfDue(bool advanceClock)
 //----------------------------------------------------------------------
 void
 Interrupt::PrintInt(int num){
-   //kernel->synchConsoleOut->PutChar('e');   
+   kernel->synchConsoleOut->PutChar('e');   
 }
 
 //----------------------------------------------------------------------
