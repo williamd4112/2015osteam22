@@ -56,8 +56,7 @@ PendingInterrupt::PendingInterrupt(CallBackObj *callOnInt,
 //----------------------------------------------------------------------
 
 static int
-PendingCompare (PendingInterrupt *x, PendingInterrupt *y)
-{
+PendingCompare (PendingInterrupt *x, PendingInterrupt *y){
     if (x->when < y->when) { return -1; }
     else if (x->when > y->when) { return 1; }
     else { return 0; }
@@ -338,7 +337,9 @@ Interrupt::CheckIfDue(bool advanceClock)
 //----------------------------------------------------------------------
 void
 Interrupt::PrintInt(int num){
-   kernel->synchConsoleOut->PutChar('e');   
+    char str[31];
+    int len = snprintf(str, 29, "%d\n",num);
+    kernel->synchConsoleOut->PutString(str, len);
 }
 
 //----------------------------------------------------------------------

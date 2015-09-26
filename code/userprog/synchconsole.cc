@@ -107,6 +107,19 @@ SynchConsoleOutput::PutChar(char ch)
 }
 
 //----------------------------------------------------------------------
+// SynchConsoleOutput::PutString
+//      Write a string to the console display, waiting if necessary.
+//----------------------------------------------------------------------
+void
+SynchConsoleOutput::PutString(char *str, int len)
+{
+    lock->Acquire();
+    consoleOutput->PutString(str, len);
+    waitFor->P();
+    lock->Release();
+}
+
+//----------------------------------------------------------------------
 // SynchConsoleOutput::CallBack
 //      Interrupt handler called when it's safe to send the next 
 //	character can be sent to the display.

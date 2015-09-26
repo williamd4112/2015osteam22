@@ -172,3 +172,19 @@ ConsoleOutput::PutChar(char ch)
     kernel->interrupt->Schedule(this, ConsoleTime, ConsoleWriteInt);
 }
 
+//----------------------------------------------------------------------
+// ConsoleOutput::PutString()
+// 	Write a string to the simulated display, schedule an interrupt 
+//	to occur in the future, and return.
+//----------------------------------------------------------------------
+
+void
+ConsoleOutput::PutString(char *str, int len)
+{
+    ASSERT(putBusy == FALSE);
+    WriteFile(writeFileNo, str, sizeof(char) * len);
+    putBusy = TRUE;
+    kernel->interrupt->Schedule(this, ConsoleTime, ConsoleWriteInt);
+}
+
+
