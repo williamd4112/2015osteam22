@@ -602,7 +602,7 @@ PROGRAMS	test/Makefile	/^PROGRAMS = unknownhost$/;"	m
 PacketHeader	machine/network.h	/^class PacketHeader {$/;"	c
 PageFaultException	machine/machine.h	/^		     PageFaultException,    \/\/ No valid translation found$/;"	e	enum:ExceptionType
 PageSize	machine/machine.h	/^const int PageSize = 128; 		\/\/ set the page size equal to$/;"	v
-PendingCompare	machine/interrupt.cc	/^PendingCompare (PendingInterrupt *x, PendingInterrupt *y)$/;"	f	file:
+PendingCompare	machine/interrupt.cc	/^PendingCompare (PendingInterrupt *x, PendingInterrupt *y){$/;"	f	file:
 PendingInterrupt	machine/interrupt.cc	/^PendingInterrupt::PendingInterrupt(CallBackObj *callOnInt, $/;"	f	class:PendingInterrupt
 PendingInterrupt	machine/interrupt.h	/^class PendingInterrupt {$/;"	c
 PersistentBitmap	filesys/pbitmap.cc	/^PersistentBitmap::PersistentBitmap(OpenFile *file, int numItems):Bitmap(numItems) $/;"	f	class:PersistentBitmap
@@ -634,6 +634,8 @@ PrintSector	machine/disk.cc	/^PrintSector (bool writing, int sector, char *data)
 Put	network/post.cc	/^MailBox::Put(PacketHeader pktHdr, MailHeader mailHdr, char *data)$/;"	f	class:MailBox
 PutChar	machine/console.cc	/^ConsoleOutput::PutChar(char ch)$/;"	f	class:ConsoleOutput
 PutChar	userprog/synchconsole.cc	/^SynchConsoleOutput::PutChar(char ch)$/;"	f	class:SynchConsoleOutput
+PutString	machine/console.cc	/^ConsoleOutput::PutString(char *str, int len)$/;"	f	class:ConsoleOutput
+PutString	userprog/synchconsole.cc	/^SynchConsoleOutput::PutString(char *str, int len)$/;"	f	class:SynchConsoleOutput
 R31	machine/mipssim.h	97;"	d
 RD	machine/mipssim.h	/^enum RegType { NONE, RS, RT, RD, EXTRA }; $/;"	e	enum:RegType
 READY	threads/thread.h	/^enum ThreadStatus { JUST_CREATED, RUNNING, READY, BLOCKED, ZOMBIE };$/;"	e	enum:ThreadStatus

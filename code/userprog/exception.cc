@@ -75,7 +75,7 @@ ExceptionHandler(ExceptionType which)
 			ASSERTNOTREACHED();
 			break;
 		case SC_Create:
-			val = kernel->machine->ReadRegister(4);
+			val = kernel->machine->ReadRegister(4); // filename pointer stored in R4
 			{
 			char *filename = &(kernel->machine->mainMemory[val]);
 			//cout << filename << endl;
@@ -137,6 +137,9 @@ ExceptionHandler(ExceptionType which)
 		  }
                   return;
                   ASSERTNOTREACHED();
+                }
+                case SC_Open:
+                {
                 }
       	default:
 			cerr << "Unexpected system call " << type << "\n";
