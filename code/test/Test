@@ -1,0 +1,11 @@
+#!/bin/bash
+
+cd /home/os2015/2015osteam22/NachOS-4.0_MP1/code/test
+if [ ! -z $1 ]; then
+    cd ../build.linux
+    make && cd ../test
+    make $1 && ../build.linux/nachos -e $1
+else
+    echo "No Target"; 
+fi
+

@@ -90,8 +90,11 @@ CheckOverflow	threads/thread.cc	/^Thread::CheckOverflow()$/;"	f	class:Thread
 CheckToBeDestroyed	threads/scheduler.cc	/^Scheduler::CheckToBeDestroyed()$/;"	f	class:Scheduler
 Cleanup	threads/main.cc	/^Cleanup(int x)$/;"	f	file:
 Clear	lib/bitmap.cc	/^Bitmap::Clear(int which)$/;"	f	class:Bitmap
+Close	filesys/filesys.h	/^    int Close(int id)$/;"	f	class:FileSystem
 Close	lib/sysdep.cc	/^Close(int fd)$/;"	f
 Close	test/start.S	/^Close:$/;"	l
+CloseFile	machine/interrupt.cc	/^Interrupt::CloseFile(int id)$/;"	f	class:Interrupt
+CloseFile	threads/kernel.cc	/^int Kernel::CloseFile(int id)$/;"	f	class:Kernel
 CloseSocket	lib/sysdep.cc	/^CloseSocket(int sockID)$/;"	f
 ComputeLatency	machine/disk.cc	/^Disk::ComputeLatency(int newSector, bool writing)$/;"	f	class:Disk
 Condition	threads/synch.cc	/^Condition::Condition(char* debugName)$/;"	f	class:Condition
@@ -823,12 +826,14 @@ SynchDisk	filesys/synchdisk.h	/^class SynchDisk : public CallBackObj$/;"	c
 SynchList	threads/synchlist.cc	/^SynchList<T>::SynchList()$/;"	f	class:SynchList
 SynchList	threads/synchlist.h	/^class SynchList$/;"	c
 SysAdd	userprog/ksyscall.h	/^int SysAdd(int op1, int op2)$/;"	f
+SysClose	userprog/ksyscall.h	/^int SysClose(OpenFileId id)$/;"	f
 SysConsoleInput	userprog/syscall.h	112;"	d
 SysConsoleOutput	userprog/syscall.h	113;"	d
 SysCreate	userprog/ksyscall.h	/^int SysCreate(char *filename)$/;"	f
 SysHalt	userprog/ksyscall.h	/^void SysHalt()$/;"	f
 SysOpen	userprog/ksyscall.h	/^int SysOpen(char *filename)$/;"	f
 SysPrintInt	userprog/ksyscall.h	/^void SysPrintInt(int num)$/;"	f
+SysWrite	userprog/ksyscall.h	/^int SysWrite(char *buffer, int size, OpenFileId id)$/;"	f
 SyscallException	machine/machine.h	/^                     SyscallException,      \/\/ A program executed a system call.$/;"	e	enum:ExceptionType
 SystemMode	machine/interrupt.h	/^enum MachineStatus {IdleMode, SystemMode, UserMode};$/;"	e	enum:MachineStatus
 SystemTick	machine/stats.h	/^const int SystemTick =	  10; 	\/\/ advance each time interrupts are enabled$/;"	v
@@ -911,6 +916,7 @@ WhenDonePCState	threads/switch.h	60;"	d
 WhenDonePCState	threads/switch.h	90;"	d
 WordToHost	machine/translate.cc	/^WordToHost(unsigned int word)$/;"	f
 WordToMachine	machine/translate.cc	/^WordToMachine(unsigned int word)$/;"	f
+Write	filesys/filesys.h	/^    int Write(char *buffer, int size, int id)$/;"	f	class:FileSystem
 Write	filesys/openfile.cc	/^OpenFile::Write(char *into, int numBytes)$/;"	f	class:OpenFile
 Write	filesys/openfile.h	/^    int Write(char *from, int numBytes)$/;"	f	class:OpenFile
 Write	test/start.S	/^Write:$/;"	l
@@ -920,6 +926,8 @@ WriteBack	filesys/directory.cc	/^Directory::WriteBack(OpenFile *file)$/;"	f	clas
 WriteBack	filesys/filehdr.cc	/^FileHeader::WriteBack(int sector)$/;"	f	class:FileHeader
 WriteBack	filesys/pbitmap.cc	/^PersistentBitmap::WriteBack(OpenFile *file)$/;"	f	class:PersistentBitmap
 WriteFile	lib/sysdep.cc	/^WriteFile(int fd, char *buffer, int nBytes)$/;"	f
+WriteFile	machine/interrupt.cc	/^Interrupt::WriteFile(char *buffer, int size, int id)$/;"	f	class:Interrupt
+WriteFile	threads/kernel.cc	/^int Kernel::WriteFile(char *buffer, int size, int id)$/;"	f	class:Kernel
 WriteMem	machine/translate.cc	/^Machine::WriteMem(int addr, int size, int value)$/;"	f	class:Machine
 WriteRegister	machine/machine.cc	/^Machine::WriteRegister(int num, int value)$/;"	f	class:Machine
 WriteRequest	machine/disk.cc	/^Disk::WriteRequest(int sectorNumber, char* data)$/;"	f	class:Disk
