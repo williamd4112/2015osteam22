@@ -23,19 +23,20 @@ int uninitdata[N];                   /* allocate space in .bss segment        */
 
 main()
 {
-	/* automatic variable stored on stack or in register */
-        int i;
-	int stack1 = 0xaa;                
-	int stack2;
-        const int stack3 = 0xee;     /* in reg or on stack not .rdata */
-        char *str = "Hello World .rdata segment\n";
+    /* automatic variable stored on stack or in register */
+    int i;
+    int stack1 = 0xaa;
+    int stack2;
+    const int stack3 = 0xee;     /* in reg or on stack not .rdata */
+    char *str = "Hello World .rdata segment\n";
 
-	/* str is stored on the stack or in a register
-	 * but text that is initialized is stored in .rdata
-	 */
+    /* str is stored on the stack or in a register
+     * but text that is initialized is stored in .rdata
+     */
 
-        for (i=0; i<N; i++) {
-          uninitdata[i] = i;
-        }
-        Halt();
+    for (i=0; i<N; i++)
+    {
+        uninitdata[i] = i;
+    }
+    Halt();
 }

@@ -1,6 +1,6 @@
-// synch.cc 
+// synch.cc
 //	Routines for synchronizing threads.  Three kinds of
-//	synchronization routines are defined here: semaphores, locks 
+//	synchronization routines are defined here: semaphores, locks
 //   	and condition variables.
 //
 // Any implementation of a synchronization routine needs some
@@ -18,7 +18,7 @@
 //
 // Once we'e implemented one set of higher level atomic operations,
 // we can implement others using that implementation.  We illustrate
-// this by implementing locks and condition variables on top of 
+// this by implementing locks and condition variables on top of
 // semaphores, instead of directly enabling and disabling interrupts.
 //
 // Locks are implemented using a semaphore to keep track of
@@ -29,7 +29,7 @@
 // a bit trickier, as explained below under Condition::Wait.
 //
 // Copyright (c) 1992-1996 The Regents of the University of California.
-// All rights reserved.  See copyright.h for copyright notice and limitation 
+// All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
@@ -77,18 +77,19 @@ Semaphore::P()
 {
     Interrupt *interrupt = kernel->interrupt;
     Thread *currentThread = kernel->currentThread;
-    
+
     // disable interrupts
-    IntStatus oldLevel = interrupt->SetLevel(IntOff);	
-    
-    while (value == 0) { 		// semaphore not available
-	queue->Append(currentThread);	// so go to sleep
-	currentThread->Sleep(FALSE);
-    } 
+    IntStatus oldLevel = interrupt->SetLevel(IntOff);
+
+    while (value == 0)   		// semaphore not available
+    {
+        queue->Append(currentThread);	// so go to sleep
+        currentThread->Sleep(FALSE);
+    }
     value--; 			// semaphore available, consume its value
-   
+
     // re-enable interrupts
-    (void) interrupt->SetLevel(oldLevel);	
+    (void) interrupt->SetLevel(oldLevel);
 }
 
 //----------------------------------------------------------------------
@@ -103,15 +104,16 @@ void
 Semaphore::V()
 {
     Interrupt *interrupt = kernel->interrupt;
-    
+
     // disable interrupts
-    IntStatus oldLevel = interrupt->SetLevel(IntOff);	
-    
-    if (!queue->IsEmpty()) {  // make thread ready.
-	kernel->scheduler->ReadyToRun(queue->RemoveFront());
+    IntStatus oldLevel = interrupt->SetLevel(IntOff);
+
+    if (!queue->IsEmpty())    // make thread ready.
+    {
+        kernel->scheduler->ReadyToRun(queue->RemoveFront());
     }
     value++;
-    
+
     // re-enable interrupts
     (void) interrupt->SetLevel(oldLevel);
 }
@@ -124,11 +126,12 @@ Semaphore::V()
 
 static Semaphore *ping;
 static void
-SelfTestHelper (Semaphore *pong) 
+SelfTestHelper (Semaphore *pong)
 {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++)
+    {
         ping->P();
-	pong->V();
+        pong->V();
     }
 }
 
@@ -140,9 +143,10 @@ Semaphore::SelfTest()
     ASSERT(value == 0);		// otherwise test won't work!
     ping = new Semaphore("ping", 0);
     helper->Fork((VoidFunctionPtr) SelfTestHelper, this);
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++)
+    {
         ping->V();
-	this->P();
+        this->P();
     }
     delete ping;
 }
@@ -204,7 +208,7 @@ void Lock::Release()
 
 //----------------------------------------------------------------------
 // Condition::Condition
-// 	Initialize a condition variable, so that it can be 
+// 	Initialize a condition variable, so that it can be
 //	used for synchronization.  Initially, no one is waiting
 //	on the condition.
 //
@@ -241,18 +245,18 @@ Condition::~Condition()
 //	"conditionLock" -- lock protecting the use of this condition
 //----------------------------------------------------------------------
 
-void Condition::Wait(Lock* conditionLock) 
+void Condition::Wait(Lock* conditionLock)
 {
-     Semaphore *waiter;
-    
-     ASSERT(conditionLock->IsHeldByCurrentThread());
+    Semaphore *waiter;
 
-     waiter = new Semaphore("condition", 0);
-     waitQueue->Append(waiter);
-     conditionLock->Release();
-     waiter->P();
-     conditionLock->Acquire();
-     delete waiter;
+    ASSERT(conditionLock->IsHeldByCurrentThread());
+
+    waiter = new Semaphore("condition", 0);
+    waitQueue->Append(waiter);
+    conditionLock->Release();
+    waiter->P();
+    conditionLock->Acquire();
+    delete waiter;
 }
 
 //----------------------------------------------------------------------
@@ -273,12 +277,13 @@ void Condition::Wait(Lock* conditionLock)
 void Condition::Signal(Lock* conditionLock)
 {
     Semaphore *waiter;
-    
+
     ASSERT(conditionLock->IsHeldByCurrentThread());
-    
-    if (!waitQueue->IsEmpty()) {
+
+    if (!waitQueue->IsEmpty())
+    {
         waiter = waitQueue->RemoveFront();
-	waiter->V();
+        waiter->V();
     }
 }
 
@@ -289,9 +294,10 @@ void Condition::Signal(Lock* conditionLock)
 //	"conditionLock" -- lock protecting the use of this condition
 //----------------------------------------------------------------------
 
-void Condition::Broadcast(Lock* conditionLock) 
+void Condition::Broadcast(Lock* conditionLock)
 {
-    while (!waitQueue->IsEmpty()) {
+    while (!waitQueue->IsEmpty())
+    {
         Signal(conditionLock);
     }
 }

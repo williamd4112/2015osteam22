@@ -1,0 +1,1 @@
+astyle --style=gnu -r ./
