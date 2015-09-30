@@ -73,6 +73,11 @@ public:
         return fileDescriptorTable[id]->Write(buffer, size);
     }
     
+    int Read(char *buffer, int size, int id)
+    {
+        return fileDescriptorTable[id]->Read(buffer, size);
+    }
+
     int Close(int id)
     {
         delete fileDescriptorTable[id];

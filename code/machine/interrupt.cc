@@ -283,6 +283,12 @@ Interrupt::WriteFile(char *buffer, int size, int id)
 }
 
 int
+Interrupt::ReadFile(char *buffer, int size, int id)
+{
+    return kernel->ReadFile(buffer, size, id);
+}
+
+int
 Interrupt::CloseFile(int id)
 {
     return kernel->CloseFile(id);

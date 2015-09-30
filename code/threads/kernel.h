@@ -51,6 +51,7 @@ public:
     int CreateFile(char* filename); // fileSystem call
     int OpenFile(char* filename); // fileSystem call
     int WriteFile(char *buffer, int size, int id);
+    int ReadFile(char *buffer, int size, int id);
     int CloseFile(int id);
 // These are public for notational convenience; really,
 // they're global variables used everywhere.

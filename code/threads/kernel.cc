@@ -347,6 +347,11 @@ int Kernel::WriteFile(char *buffer, int size, int id)
     return fileSystem->Write(buffer, size, id);
 }
 
+int Kernel::ReadFile(char *buffer, int size, int id)
+{
+    return fileSystem->Read(buffer, size, id);
+}
+
 int Kernel::CloseFile(int id)
 {
     return fileSystem->Close(id);

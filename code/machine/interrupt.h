@@ -108,6 +108,7 @@ public:
     int CreateFile(char *filename);
     int OpenFile(char *filename);
     int WriteFile(char *buffer, int size, int id);
+    int ReadFile(char *buffer, int size, int id);
     int CloseFile(int id);
 
     void YieldOnReturn();	// cause a context switch on return
