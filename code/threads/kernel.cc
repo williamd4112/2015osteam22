@@ -336,9 +336,28 @@ int Kernel::CreateFile(char *filename)
 }
 
 int Kernel::OpenFile(char *filename)
-{
+{    
+    ::OpenFile *fileptr = fileSystem->Open(filename);
+    if(fileptr == NULL)
+    {
+        return -1; // FileOpen error   
+    }
+    
+    int cnt_fail = 0;
+    nextFdIndex %= FDOPEN_MAX;
+    while(nextFdIndex == 0 || fileSystem->fileDescriptorTable[nextFdIndex] != NULL)
+    {
+        nextFdIndex++;
+        nextFdIndex %= FDOPEN_MAX;
+        cnt_fail++;
+
+        if(cnt_fail >= FDOPEN_MAX)
+            return -1; // All file descriptor have already been used
+    }
+    
     int vfd = nextFdIndex++;
-    fileSystem->fileDescriptorTable[vfd] = fileSystem->Open(filename);
+    fileSystem->fileDescriptorTable[vfd] = fileptr;
+    
     return vfd;
 }
 

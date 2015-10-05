@@ -70,21 +70,32 @@ public:
 
     int Write(char *buffer, int size, int id)
     {
+        if(id >= FDOPEN_MAX || id <= 0) return -1;
+        if(fileDescriptorTable[id] == NULL) return -1;       
         return fileDescriptorTable[id]->Write(buffer, size);
     }
     
     int Read(char *buffer, int size, int id)
-    {
+    {   
+        if(id >= FDOPEN_MAX || id <= 0) return -1;
+        if(fileDescriptorTable[id] == NULL) return -1;
         return fileDescriptorTable[id]->Read(buffer, size);
     }
 
     int Close(int id)
     {
-        delete fileDescriptorTable[id];
-        fileDescriptorTable[id] = NULL;
-        return 1; // Destructor of OpenFile close itself, and Close(id) is always successful if the system doesn't abort
-                  // (implementation in sysdep.cc use ASSERT(retVal >= 0) to gurantee
-                  // In linux, close() return -1 if fail
+        if(id >= FDOPEN_MAX || id <= 0) return -1;
+        if(fileDescriptorTable[id] == NULL)
+        {
+            return 0; // File Descriptor does not exist
+        }
+        else
+        {
+            delete fileDescriptorTable[id];
+            fileDescriptorTable[id] = NULL;
+            return 1;        
+        }
+
     }
 
     bool Remove(char *name)
