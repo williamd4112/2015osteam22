@@ -1,6 +1,6 @@
-// main.cc 
-//	Driver code to initialize, selftest, and run the 
-//	operating system kernel.  
+// main.cc
+//	Driver code to initialize, selftest, and run the
+//	operating system kernel.
 //
 // Usage: nachos -d <debugflags> -rs <random seed #>
 //              -s -x <nachos file> -ci <consoleIn> -co <consoleOut>
@@ -28,13 +28,13 @@
 //    -p prints a Nachos file to stdout
 //    -r removes a Nachos file from the file system
 //    -l lists the contents of the Nachos directory
-//    -D prints the contents of the entire file system 
+//    -D prints the contents of the entire file system
 //
 //  Note: the file system flags are not used if the stub filesystem
 //        is being used
 //
 // Copyright (c) 1992-1996 The Regents of the University of California.
-// All rights reserved.  See copyright.h for copyright notice and limitation 
+// All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
 #define MAIN
@@ -56,11 +56,11 @@ Debug *debug;
 //	Delete kernel data structures; called when user hits "ctl-C".
 //----------------------------------------------------------------------
 
-static void 
-Cleanup(int x) 
-{     
+static void
+Cleanup(int x)
+{
     cerr << "\nCleaning up after signal " << x << "\n";
-    delete kernel; 
+    delete kernel;
 }
 
 //-------------------------------------------------------------------
@@ -86,31 +86,33 @@ Copy(char *from, char *to)
     char *buffer;
 
 // Open UNIX file
-    if ((fd = OpenForReadWrite(from,FALSE)) < 0) {       
-        printf("Copy: couldn't open input file %s\n", from);
-        return;
-    }
+    if ((fd = OpenForReadWrite(from,FALSE)) < 0)
+        {
+            printf("Copy: couldn't open input file %s\n", from);
+            return;
+        }
 
 // Figure out length of UNIX file
-    Lseek(fd, 0, 2);            
+    Lseek(fd, 0, 2);
     fileLength = Tell(fd);
     Lseek(fd, 0, 0);
 
 // Create a Nachos file of the same length
     DEBUG('f', "Copying file " << from << " of size " << fileLength <<  " to file " << to);
-    if (!kernel->fileSystem->Create(to, fileLength)) {   // Create Nachos file
-        printf("Copy: couldn't create output file %s\n", to);
-        Close(fd);
-        return;
-    }
-    
+    if (!kernel->fileSystem->Create(to, fileLength))     // Create Nachos file
+        {
+            printf("Copy: couldn't create output file %s\n", to);
+            Close(fd);
+            return;
+        }
+
     openFile = kernel->fileSystem->Open(to);
     ASSERT(openFile != NULL);
-    
+
 // Copy the data in TransferSize chunks
     buffer = new char[TransferSize];
     while ((amountRead=ReadPartial(fd, buffer, sizeof(char)*TransferSize)) > 0)
-        openFile->Write(buffer, amountRead);    
+        openFile->Write(buffer, amountRead);
     delete [] buffer;
 
 // Close the UNIX and the Nachos files
@@ -128,15 +130,16 @@ Copy(char *from, char *to)
 void
 Print(char *name)
 {
-    OpenFile *openFile;    
+    OpenFile *openFile;
     int i, amountRead;
     char *buffer;
 
-    if ((openFile = kernel->fileSystem->Open(name)) == NULL) {
-        printf("Print: unable to open file %s\n", name);
-        return;
-    }
-    
+    if ((openFile = kernel->fileSystem->Open(name)) == NULL)
+        {
+            printf("Print: unable to open file %s\n", name);
+            return;
+        }
+
     buffer = new char[TransferSize];
     while ((amountRead = openFile->Read(buffer, TransferSize)) > 0)
         for (i = 0; i < amountRead; i++)
@@ -155,19 +158,19 @@ Print(char *name)
 static void
 CreateDirectory(char *name)
 {
-	// MP4 Assignment
+    // MP4 Assignment
 }
 
 //----------------------------------------------------------------------
 // main
-// 	Bootstrap the operating system kernel.  
-//	
+// 	Bootstrap the operating system kernel.
+//
 //	Initialize kernel data structures
 //	Call some test routines
 //	Call "Run" to start an initial user program running
 //
 //	"argc" is the number of command line arguments (including the name
-//		of the command) -- ex: "nachos -d +" -> argc = 3 
+//		of the command) -- ex: "nachos -d +" -> argc = 3
 //	"argv" is an array of strings, one for each command line argument
 //		ex: "nachos -d +" -> argv = {"nachos", "-d", "+"}
 //----------------------------------------------------------------------
@@ -184,109 +187,125 @@ main(int argc, char **argv)
 #ifndef FILESYS_STUB
     char *copyUnixFileName = NULL;    // UNIX file to be copied into Nachos
     char *copyNachosFileName = NULL;  // name of copied file in Nachos
-    char *printFileName = NULL; 
+    char *printFileName = NULL;
     char *removeFileName = NULL;
     bool dirListFlag = false;
     bool dumpFlag = false;
-	// MP4 mod tag
-	char *createDirectoryName = NULL;
-	char *listDirectoryName = NULL;
-	bool mkdirFlag = false;
-	bool recursiveListFlag = false;
-	bool recursiveRemoveFlag = false;
+    // MP4 mod tag
+    char *createDirectoryName = NULL;
+    char *listDirectoryName = NULL;
+    bool mkdirFlag = false;
+    bool recursiveListFlag = false;
+    bool recursiveRemoveFlag = false;
 #endif //FILESYS_STUB
 
     // some command line arguments are handled here.
     // those that set kernel parameters are handled in
     // the Kernel constructor
-    for (i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "-d") == 0) {
-	    ASSERT(i + 1 < argc);   // next argument is debug string
-            debugArg = argv[i + 1];
-	    i++;
-	}
-	else if (strcmp(argv[i], "-z") == 0) {
-            cout << copyright << "\n";
-	}
-	else if (strcmp(argv[i], "-x") == 0) {
-	    ASSERT(i + 1 < argc);
-	    userProgName = argv[i + 1];
-	    i++;
-	}
-	else if (strcmp(argv[i], "-K") == 0) {
-	    threadTestFlag = TRUE;
-	}
-	else if (strcmp(argv[i], "-C") == 0) {
-	    consoleTestFlag = TRUE;
-	}
-	else if (strcmp(argv[i], "-N") == 0) {
-	    networkTestFlag = TRUE;
-	}
+    for (i = 1; i < argc; i++)
+        {
+            if (strcmp(argv[i], "-d") == 0)
+                {
+                    ASSERT(i + 1 < argc);   // next argument is debug string
+                    debugArg = argv[i + 1];
+                    i++;
+                }
+            else if (strcmp(argv[i], "-z") == 0)
+                {
+                    cout << copyright << "\n";
+                }
+            else if (strcmp(argv[i], "-x") == 0)
+                {
+                    ASSERT(i + 1 < argc);
+                    userProgName = argv[i + 1];
+                    i++;
+                }
+            else if (strcmp(argv[i], "-K") == 0)
+                {
+                    threadTestFlag = TRUE;
+                }
+            else if (strcmp(argv[i], "-C") == 0)
+                {
+                    consoleTestFlag = TRUE;
+                }
+            else if (strcmp(argv[i], "-N") == 0)
+                {
+                    networkTestFlag = TRUE;
+                }
 #ifndef FILESYS_STUB
-	else if (strcmp(argv[i], "-cp") == 0) {
-	    ASSERT(i + 2 < argc);
-	    copyUnixFileName = argv[i + 1];
-	    copyNachosFileName = argv[i + 2];
-	    i += 2;
-	}
-	else if (strcmp(argv[i], "-p") == 0) {
-	    ASSERT(i + 1 < argc);
-	    printFileName = argv[i + 1];
-	    i++;
-	}
-	else if (strcmp(argv[i], "-r") == 0) {
-	    ASSERT(i + 1 < argc);
-	    removeFileName = argv[i + 1];
-	    i++;
-	}
-	else if (strcmp(argv[i], "-rr") == 0) {
-		// MP4 mod tag
-		ASSERT(i + 1 < argc);
-		removeFileName = argv[i + 1];
-		recursiveRemoveFlag = true;
-		i++;
-	}
-	else if (strcmp(argv[i], "-l") == 0) {
-		// MP4 mod tag
-		ASSERT(i + 1 < argc);
-		listDirectoryName = argv[i + 1];
-		dirListFlag = true;
-		i++;
-	}
-	else if (strcmp(argv[i], "-lr") == 0) {
-		// MP4 mod tag
-		// recursive list
-		ASSERT(i + 1 < argc);
-		listDirectoryName = argv[i + 1];
-		dirListFlag = true;
-		recursiveListFlag = true;
-		i++;
-	}
-	else if (strcmp(argv[i], "-mkdir") == 0) {
-		// MP4 mod tag
-		ASSERT(i + 1 < argc);
-		createDirectoryName = argv[i + 1];
-		mkdirFlag = true;
-		i++;
-	}
-	else if (strcmp(argv[i], "-D") == 0) {
-	    dumpFlag = true;
-	}
+            else if (strcmp(argv[i], "-cp") == 0)
+                {
+                    ASSERT(i + 2 < argc);
+                    copyUnixFileName = argv[i + 1];
+                    copyNachosFileName = argv[i + 2];
+                    i += 2;
+                }
+            else if (strcmp(argv[i], "-p") == 0)
+                {
+                    ASSERT(i + 1 < argc);
+                    printFileName = argv[i + 1];
+                    i++;
+                }
+            else if (strcmp(argv[i], "-r") == 0)
+                {
+                    ASSERT(i + 1 < argc);
+                    removeFileName = argv[i + 1];
+                    i++;
+                }
+            else if (strcmp(argv[i], "-rr") == 0)
+                {
+                    // MP4 mod tag
+                    ASSERT(i + 1 < argc);
+                    removeFileName = argv[i + 1];
+                    recursiveRemoveFlag = true;
+                    i++;
+                }
+            else if (strcmp(argv[i], "-l") == 0)
+                {
+                    // MP4 mod tag
+                    ASSERT(i + 1 < argc);
+                    listDirectoryName = argv[i + 1];
+                    dirListFlag = true;
+                    i++;
+                }
+            else if (strcmp(argv[i], "-lr") == 0)
+                {
+                    // MP4 mod tag
+                    // recursive list
+                    ASSERT(i + 1 < argc);
+                    listDirectoryName = argv[i + 1];
+                    dirListFlag = true;
+                    recursiveListFlag = true;
+                    i++;
+                }
+            else if (strcmp(argv[i], "-mkdir") == 0)
+                {
+                    // MP4 mod tag
+                    ASSERT(i + 1 < argc);
+                    createDirectoryName = argv[i + 1];
+                    mkdirFlag = true;
+                    i++;
+                }
+            else if (strcmp(argv[i], "-D") == 0)
+                {
+                    dumpFlag = true;
+                }
 #endif //FILESYS_STUB
-	else if (strcmp(argv[i], "-u") == 0) {
-            cout << "Partial usage: nachos [-z -d debugFlags]\n";
-            cout << "Partial usage: nachos [-x programName]\n";
-	    cout << "Partial usage: nachos [-K] [-C] [-N]\n";
+            else if (strcmp(argv[i], "-u") == 0)
+                {
+                    cout << "Partial usage: nachos [-z -d debugFlags]\n";
+                    cout << "Partial usage: nachos [-x programName]\n";
+                    cout << "Partial usage: nachos [-K] [-C] [-N]\n";
 #ifndef FILESYS_STUB
-            cout << "Partial usage: nachos [-cp UnixFile NachosFile]\n";
-            cout << "Partial usage: nachos [-p fileName] [-r fileName]\n";
-            cout << "Partial usage: nachos [-l] [-D]\n";
+                    cout << "Partial usage: nachos [-cp UnixFile NachosFile]\n";
+                    cout << "Partial usage: nachos [-p fileName] [-r fileName]\n";
+                    cout << "Partial usage: nachos [-l] [-D]\n";
 #endif //FILESYS_STUB
-	}
+                }
 
-    }
+        }
     debug = new Debug(debugArg);
-    
+
     DEBUG(dbgThread, "Entering main");
 
     kernel = new Kernel(argc, argv);
@@ -297,47 +316,56 @@ main(int argc, char **argv)
 
     // at this point, the kernel is ready to do something
     // run some tests, if requested
-    if (threadTestFlag) {
-      kernel->ThreadSelfTest();  // test threads and synchronization
-    }
-    if (consoleTestFlag) {
-      kernel->ConsoleTest();   // interactive test of the synchronized console
-    }
-    if (networkTestFlag) {
-      kernel->NetworkTest();   // two-machine test of the network
-    }
+    if (threadTestFlag)
+        {
+            kernel->ThreadSelfTest();  // test threads and synchronization
+        }
+    if (consoleTestFlag)
+        {
+            kernel->ConsoleTest();   // interactive test of the synchronized console
+        }
+    if (networkTestFlag)
+        {
+            kernel->NetworkTest();   // two-machine test of the network
+        }
 
 #ifndef FILESYS_STUB
-    if (removeFileName != NULL) {
-		kernel->fileSystem->Remove(removeFileName);
-    }
-    if (copyUnixFileName != NULL && copyNachosFileName != NULL) {
-		Copy(copyUnixFileName,copyNachosFileName);
-    }
-    if (dumpFlag) {
-		kernel->fileSystem->Print();
-    }
-    if (dirListFlag) {
-		kernel->fileSystem->List();
-    }
-	if (mkdirFlag) {
-		// MP4 mod tag
-		CreateDirectory(createDirectoryName);
-	}
-    if (printFileName != NULL) {
-      Print(printFileName);
-    }
+    if (removeFileName != NULL)
+        {
+            kernel->fileSystem->Remove(removeFileName);
+        }
+    if (copyUnixFileName != NULL && copyNachosFileName != NULL)
+        {
+            Copy(copyUnixFileName,copyNachosFileName);
+        }
+    if (dumpFlag)
+        {
+            kernel->fileSystem->Print();
+        }
+    if (dirListFlag)
+        {
+            kernel->fileSystem->List();
+        }
+    if (mkdirFlag)
+        {
+            // MP4 mod tag
+            CreateDirectory(createDirectoryName);
+        }
+    if (printFileName != NULL)
+        {
+            Print(printFileName);
+        }
 #endif // FILESYS_STUB
 
     // finally, run an initial user program if requested to do so
 
-		kernel->ExecAll();
+    kernel->ExecAll();
     // If we don't run a user program, we may get here.
     // Calling "return" would terminate the program.
     // Instead, call Halt, which will first clean up, then
     //  terminate.
 //    kernel->interrupt->Halt();
-    
+
     ASSERTNOTREACHED();
 }
 

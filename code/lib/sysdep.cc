@@ -1,5 +1,5 @@
 // sysdep.cc
-//	Implementation of system-dependent interface.  Nachos uses the 
+//	Implementation of system-dependent interface.  Nachos uses the
 //	routines defined here, rather than directly calling the UNIX library,
 //	to simplify porting between versions of UNIX, and even to
 //	other systems, such as MSDOS.
@@ -8,7 +8,7 @@
 //	for the underlying UNIX system calls.
 //
 //	NOTE: all of these routines refer to operations on the underlying
-//	host machine (e.g., the DECstation, SPARC, etc.), supporting the 
+//	host machine (e.g., the DECstation, SPARC, etc.), supporting the
 //	Nachos simulation code.  Nachos implements similar operations,
 //	(such as opening a file), but those are implemented in terms
 //	of hardware devices, which are simulated by calls to the underlying
@@ -20,7 +20,7 @@
 // 	changed by the C++ compiler.
 //
 // Copyright (c) 1992-1996 The Regents of the University of California.
-// All rights reserved.  See copyright.h for copyright notice and limitation 
+// All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
@@ -41,7 +41,7 @@
 #endif
 
 #ifdef LINUX	 // at this point, linux doesn't support mprotect 
-#define NO_MPROT     
+#define NO_MPROT
 #endif
 #ifdef DOS	// neither does DOS
 #define NO_MPROT
@@ -51,18 +51,18 @@ extern "C" {
 #include <signal.h>
 #include <sys/types.h>
 
-#ifndef NO_MPROT 
+#ifndef NO_MPROT
 #include <sys/mman.h>
 #endif
 
-// UNIX routines called by procedures in this file 
+// UNIX routines called by procedures in this file
 
 #if defined CYGWIN
-  size_t getpagesize(void);
+    size_t getpagesize(void);
 #else
- int getpagesize(void);
+    int getpagesize(void);
 #endif
-unsigned sleep(unsigned);
+    unsigned sleep(unsigned);
 //#ifdef SOLARIS
 //int usleep(useconds_t);
 //#else
@@ -70,7 +70,7 @@ unsigned sleep(unsigned);
 //#endif
 
 
-#ifndef NO_MPROT	
+#ifndef NO_MPROT
 
 #ifdef OSF
 #define OSF_OR_AIX
@@ -80,29 +80,29 @@ unsigned sleep(unsigned);
 #endif
 
 #ifdef OSF_OR_AIX
-int mprotect(const void *, long unsigned int, int);
+    int mprotect(const void *, long unsigned int, int);
 #else
-int mprotect(char *, unsigned int, int);
+    int mprotect(char *, unsigned int, int);
 #endif
 #endif
 
 #if defined(BSD) || defined(SOLARIS) || defined(LINUX)
 //KMS
 // added Solaris and LINUX
-int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
-             struct timeval *timeout);
+    int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
+               struct timeval *timeout);
 #else
-int select(int numBits, void *readFds, void *writeFds, void *exceptFds, 
-	struct timeval *timeout);
+    int select(int numBits, void *readFds, void *writeFds, void *exceptFds,
+               struct timeval *timeout);
 #endif
 
-int socket(int, int, int);
+    int socket(int, int, int);
 
 #if defined(SUNOS) || defined(ULTRIX)
-long tell(int);
-int bind (int, const void*, int);
-int recvfrom (int, void*, int, int, void*, int *);
-int sendto (int, const void*, int, int, void*, int);
+    long tell(int);
+    int bind (int, const void*, int);
+    int recvfrom (int, void*, int, int, void*, int *);
+    int sendto (int, const void*, int, int, void*, int);
 #endif
 
 }
@@ -113,7 +113,7 @@ int sendto (int, const void*, int, int, void*, int);
 //	hitting ctl-C.
 //----------------------------------------------------------------------
 
-void 
+void
 CallOnUserAbort(void (*func)(int))
 {
     (void)signal(SIGINT, func);
@@ -126,7 +126,7 @@ CallOnUserAbort(void (*func)(int))
 //	in a different UNIX shell.
 //----------------------------------------------------------------------
 
-void 
+void
 Delay(int seconds)
 {
     (void) sleep((unsigned) seconds);
@@ -138,7 +138,7 @@ Delay(int seconds)
 //	to prevent an idle Nachos process from spinning...
 //----------------------------------------------------------------------
 
-void 
+void
 UDelay(unsigned int useconds)
 {
 //#ifdef SOLARIS
@@ -154,7 +154,7 @@ UDelay(unsigned int useconds)
 // 	Quit and drop core.
 //----------------------------------------------------------------------
 
-void 
+void
 Abort()
 {
     abort();
@@ -165,7 +165,7 @@ Abort()
 // 	Quit without dropping core.
 //----------------------------------------------------------------------
 
-void 
+void
 Exit(int exitCode)
 {
     exit(exitCode);
@@ -177,7 +177,7 @@ Exit(int exitCode)
 //	now obsolete "srand" and "rand" because they are more portable!
 //----------------------------------------------------------------------
 
-void 
+void
 RandomInit(unsigned seed)
 {
     srand(seed);
@@ -188,7 +188,7 @@ RandomInit(unsigned seed)
 // 	Return a pseudo-random number.
 //----------------------------------------------------------------------
 
-unsigned int 
+unsigned int
 RandomNumber()
 {
     return rand();
@@ -196,7 +196,7 @@ RandomNumber()
 
 //----------------------------------------------------------------------
 // AllocBoundedArray
-// 	Return an array, with the two pages just before 
+// 	Return an array, with the two pages just before
 //	and after the array unmapped, to catch illegal references off
 //	the end of the array.  Particularly useful for catching overflow
 //	beyond fixed-size thread execution stacks.
@@ -206,7 +206,7 @@ RandomNumber()
 //	"size" -- amount of useful space needed (in bytes)
 //----------------------------------------------------------------------
 
-char * 
+char *
 AllocBoundedArray(int size)
 {
 #ifdef NO_MPROT
@@ -230,13 +230,13 @@ AllocBoundedArray(int size)
 //----------------------------------------------------------------------
 
 #ifdef NO_MPROT
-void 
+void
 DeallocBoundedArray(char *ptr, int /* size */)
 {
     delete [] ptr;
 }
 #else
-void 
+void
 DeallocBoundedArray(char *ptr, int size)
 {
     int pgSize = getpagesize();
@@ -249,7 +249,7 @@ DeallocBoundedArray(char *ptr, int size)
 
 //----------------------------------------------------------------------
 // PollFile
-// 	Check open file or open socket to see if there are any 
+// 	Check open file or open socket to see if there are any
 //	characters that can be read immediately.  If so, read them
 //	in, and return TRUE.
 //
@@ -292,13 +292,13 @@ PollFile(int fd)
 
     ASSERT((retVal == 0) || (retVal == 1));
     if (retVal == 0)
-	return FALSE;                 		// no char waiting to be read
+        return FALSE;                 		// no char waiting to be read
     return TRUE;
 }
 
 //----------------------------------------------------------------------
 // OpenForWrite
-// 	Open a file for writing.  Create it if it doesn't exist; truncate it 
+// 	Open a file for writing.  Create it if it doesn't exist; truncate it
 //	if it does already exist.  Return the file descriptor.
 //
 //	"name" -- file name
@@ -309,7 +309,7 @@ OpenForWrite(char *name)
 {
     int fd = open(name, O_RDWR|O_CREAT|O_TRUNC, 0666);
 
-    ASSERT(fd >= 0); 
+    ASSERT(fd >= 0);
     return fd;
 }
 
@@ -372,7 +372,7 @@ WriteFile(int fd, char *buffer, int nBytes)
 // 	Change the location within an open file.  Abort on error.
 //----------------------------------------------------------------------
 
-void 
+void
 Lseek(int fd, int offset, int whence)
 {
     int retVal = lseek(fd, offset, whence);
@@ -384,12 +384,12 @@ Lseek(int fd, int offset, int whence)
 // 	Report the current location within an open file.
 //----------------------------------------------------------------------
 
-int 
+int
 Tell(int fd)
 {
 #if defined(BSD) || defined(SOLARIS) || defined(LINUX)
     return lseek(fd,0,SEEK_CUR); // 386BSD doesn't have the tell() system call
-                                 // neither do Solaris and Linux  -KMS
+    // neither do Solaris and Linux  -KMS
 #else
     return tell(fd);
 #endif
@@ -401,11 +401,11 @@ Tell(int fd)
 // 	Close a file.  Abort on error.
 //----------------------------------------------------------------------
 
-int 
+int
 Close(int fd)
 {
     int retVal = close(fd);
-    ASSERT(retVal >= 0); 
+    ASSERT(retVal >= 0);
     return retVal;
 }
 
@@ -414,7 +414,7 @@ Close(int fd)
 // 	Delete a file.
 //----------------------------------------------------------------------
 
-bool 
+bool
 Unlink(char *name)
 {
     return unlink(name);
@@ -422,8 +422,8 @@ Unlink(char *name)
 
 //----------------------------------------------------------------------
 // OpenSocket
-// 	Open an interprocess communication (IPC) connection.  For now, 
-//	just open a datagram port where other Nachos (simulating 
+// 	Open an interprocess communication (IPC) connection.  For now,
+//	just open a datagram port where other Nachos (simulating
 //	workstations on a network) can send messages to this Nachos.
 //----------------------------------------------------------------------
 
@@ -431,7 +431,7 @@ int
 OpenSocket()
 {
     int sockID;
-    
+
     sockID = socket(AF_UNIX, SOCK_DGRAM, 0);
     ASSERT(sockID >= 0);
 
@@ -440,7 +440,7 @@ OpenSocket()
 
 //----------------------------------------------------------------------
 // CloseSocket
-// 	Close the IPC connection. 
+// 	Close the IPC connection.
 //----------------------------------------------------------------------
 
 void
@@ -454,7 +454,7 @@ CloseSocket(int sockID)
 // 	Initialize a UNIX socket address -- magical!
 //----------------------------------------------------------------------
 
-static void 
+static void
 InitSocketName(struct sockaddr_un *uname, char *name)
 {
     uname->sun_family = AF_UNIX;
@@ -464,7 +464,7 @@ InitSocketName(struct sockaddr_un *uname, char *name)
 //----------------------------------------------------------------------
 // AssignNameToSocket
 // 	Give a UNIX file name to the IPC port, so other instances of Nachos
-//	can locate the port. 
+//	can locate the port.
 //----------------------------------------------------------------------
 
 void
@@ -516,20 +516,21 @@ ReadFromSocket(int sockID, char *buffer, int packetSize)
 #else
     int size = sizeof(uName);
 #endif
-   
-    retVal = recvfrom(sockID, buffer, packetSize, 0,
-				   (struct sockaddr *) &uName, &size);
 
-    if (retVal != packetSize) {
-        perror("in recvfrom");
+    retVal = recvfrom(sockID, buffer, packetSize, 0,
+                      (struct sockaddr *) &uName, &size);
+
+    if (retVal != packetSize)
+        {
+            perror("in recvfrom");
 #if defined CYGWIN
-	cerr << "called with " << packetSize << ", got back " << retVal 
-						<< ", and " << "\n";
-#else 	
-        cerr << "called with " << packetSize << ", got back " << retVal 
-						<< ", and " << errno << "\n";
-#endif 
-    }
+            cerr << "called with " << packetSize << ", got back " << retVal
+                 << ", and " << "\n";
+#else
+            cerr << "called with " << packetSize << ", got back " << retVal
+                 << ", and " << errno << "\n";
+#endif
+        }
     ASSERT(retVal == packetSize);
 }
 
@@ -551,17 +552,18 @@ SendToSocket(int sockID, char *buffer, int packetSize, char *toName)
 
     InitSocketName(&uName, toName);
 
-    for(retryCount=0;retryCount < 10;retryCount++) {
-      retVal = sendto(sockID, buffer, packetSize, 0, 
-			(struct sockaddr *) &uName, sizeof(uName));
-      if (retVal == packetSize) return;
-      // if we did not succeed, we should see a negative
-      // return value indicating complete failure.  If we
-      // don't, something fishy is going on...
-      ASSERT(retVal < 0);
-      // wait a second before trying again
-      Delay(1);
-    }
+    for(retryCount=0; retryCount < 10; retryCount++)
+        {
+            retVal = sendto(sockID, buffer, packetSize, 0,
+                            (struct sockaddr *) &uName, sizeof(uName));
+            if (retVal == packetSize) return;
+            // if we did not succeed, we should see a negative
+            // return value indicating complete failure.  If we
+            // don't, something fishy is going on...
+            ASSERT(retVal < 0);
+            // wait a second before trying again
+            Delay(1);
+        }
     // At this point, we have failed many times
     // The most common reason for this is that the target machine
     // has halted and its socket no longer exists.

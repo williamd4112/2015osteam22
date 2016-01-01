@@ -184,7 +184,7 @@
 #
 # If you want to use the real Nachos file system (based on
 # the simulated disk), rather than the stub, remove
-# the -DFILESYS_STUB from DEFINES.
+# the -DFILESYS_ from DEFINES.
 #
 # There is a a fix to the MIPS simulator to enable it to properly
 # handle unaligned data access.  This fix is enabled by the addition
