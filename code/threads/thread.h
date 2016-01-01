@@ -51,7 +51,7 @@
 // For simplicity, I just take the maximum over all architectures.
 
 #define MachineStateSize 75
-
+#define AGING_TICKS 1500
 
 // Size of the thread's private execution stack.
 // WATCH OUT IF THIS ISN'T BIG ENOUGH!!!!!
@@ -72,9 +72,14 @@ enum ThreadStatus { JUST_CREATED, RUNNING, READY, BLOCKED, ZOMBIE };
 //
 //  Some threads also belong to a user address space; threads
 //  that only run in the kernel have a NULL address space.
-
+class Scheduler;
+class Interrupt;
+class Machine;
 class Thread
 {
+    friend class Machine;
+    friend class Interrupt;
+    friend class Scheduler;
 private:
     // NOTE: DO NOT CHANGE the order of these first two members.
     // THEY MUST be in this position for SWITCH to work.
@@ -117,6 +122,37 @@ public:
     {
         return (ID);
     }
+    
+    int getPriority()
+    {
+        return priority;
+    }
+
+    void setPriority(int p)
+    {
+        priority = p;
+    }
+    
+    int getCPUBurst()
+    {
+        return cpuBurst;
+    }
+
+    void setCPUBurst(long long burst)
+    {
+        cpuBurst = burst;
+    }
+    
+    double getGuessCPUBurst()
+    {
+        return guessCPUBurst;
+    }
+
+    void setGuessCPUBurst(long long burst)
+    {
+        guessCPUBurst = burst;
+    }
+
     void Print()
     {
         cout << name;
@@ -132,8 +168,15 @@ private:
     ThreadStatus status;	// ready, running or blocked
     char* name;
     int   ID;
+    
+    int priority;
+    int cpuBurst;
+    double guessCPUBurst;
+    int lastCPUTick;
+
     void StackAllocate(VoidFunctionPtr func, void *arg);
-    // Allocate a stack for thread.
+    void readyToContextSwitch(Thread *nextThread, int type);
+            // Allocate a stack for thread.
     // Used internally by Fork()
 
 // A thread running a user program actually has *two* sets of CPU registers --

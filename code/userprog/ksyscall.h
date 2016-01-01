@@ -56,9 +56,16 @@ int SysClose(OpenFileId id)
 
 void SysPrintInt(int num)
 {
-    //kernel->synchConsoleOut->PutChar('e');
     kernel->interrupt->PrintInt(num);
 }
 
+void SysYield()
+{
+    kernel->interrupt->Yield();
+}
+
+void SysSleep(int tick)
+{
+}
 
 #endif /* ! __USERPROG_KSYSCALL_H__ */

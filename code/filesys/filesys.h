@@ -36,6 +36,7 @@
 #include "copyright.h"
 #include "sysdep.h"
 #include "openfile.h"
+#include "syscall.h"
 
 #define FDOPEN_MAX 20
 
@@ -68,27 +69,24 @@ public:
         return new OpenFile(fileDescriptor);
     }
 
-    int Write(char *buffer, int size, int id)
+    int Write(char *buffer, int size, OpenFileId id)
     {
         if(id >= FDOPEN_MAX || id <= 0) return -1;
         if(fileDescriptorTable[id] == NULL) return -1;       
         return fileDescriptorTable[id]->Write(buffer, size);
     }
     
-    int Read(char *buffer, int size, int id)
+    int Read(char *buffer, int size, OpenFileId id)
     {   
         if(id >= FDOPEN_MAX || id <= 0) return -1;
         if(fileDescriptorTable[id] == NULL) return -1;
         return fileDescriptorTable[id]->Read(buffer, size);
     }
 
-    int Close(int id)
+    int Close(OpenFileId id)
     {
-        if(id >= FDOPEN_MAX || id <= 0) return -1;
-        if(fileDescriptorTable[id] == NULL)
-        {
-            return 0; // File Descriptor does not exist
-        }
+        if(id >= FDOPEN_MAX || id <= 0) return 0;
+        if(fileDescriptorTable[id] == NULL) return 0;
         else
         {
             delete fileDescriptorTable[id];

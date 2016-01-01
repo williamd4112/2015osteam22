@@ -9,6 +9,6 @@ main()
 
         PrintInt(n);
     }
-    Halt();
+
 }
 

@@ -48,9 +48,18 @@ Alarm::CallBack()
 {
     Interrupt *interrupt = kernel->interrupt;
     MachineStatus status = interrupt->getStatus();
-
+     
+    // Idle implies no thread in any queue, so we can't agiing or yield
     if (status != IdleMode)
     {
-        interrupt->YieldOnReturn();
+        // If L3_ROUND_ROBIN, timer interrupt cause Context Switch
+        if(kernel->currentThread->getPriority() < 50)
+            interrupt->YieldOnReturn();
+
+        // Current thread demote
+        kernel->scheduler->Demote();
+
+        // All level affected by aging
+        kernel->scheduler->Aging();       
     }
 }

@@ -19,7 +19,8 @@
 #include "main.h"
 #include "addrspace.h"
 #include "machine.h"
-#include "noff.h"
+
+bool physicPages[NumPhysPages];
 
 //----------------------------------------------------------------------
 // SwapHeader
@@ -72,14 +73,14 @@ AddrSpace::AddrSpace()
     {
         pageTable[i].virtualPage = i;	// for now, virt page # = phys page #
         pageTable[i].physicalPage = i;
-        pageTable[i].valid = TRUE;
+        pageTable[i].valid = FALSE;
         pageTable[i].use = FALSE;
         pageTable[i].dirty = FALSE;
         pageTable[i].readOnly = FALSE;
     }
 
     // zero out the entire address space
-    bzero(kernel->machine->mainMemory, MemorySize);
+    //bzero(kernel->machine->mainMemory, MemorySize);
 }
 
 //----------------------------------------------------------------------
@@ -89,6 +90,10 @@ AddrSpace::AddrSpace()
 
 AddrSpace::~AddrSpace()
 {
+    for(int i = 0; i < numPages; i++)
+    {
+        physicPages[pageTable[i].physicalPage] = false;
+    }
     delete pageTable;
 }
 
@@ -116,7 +121,7 @@ AddrSpace::Load(char *fileName)
         return FALSE;
     }
 
-    executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
+    executable->ReadAt((char *)&noffH, sizeof(noffH), 0); // Read Coff header
     if ((noffH.noffMagic != NOFFMAGIC) &&
             (WordToHost(noffH.noffMagic) == NOFFMAGIC))
         SwapHeader(&noffH);
@@ -143,26 +148,47 @@ AddrSpace::Load(char *fileName)
     // virtual memory
 
     DEBUG(dbgAddr, "Initializing address space: " << numPages << ", " << size);
+    
+    // Fill page number into thread pagetable  and zero out their physic memory
+    for(int i = 0; i < numPages; i++)
+    {
+        int physicPageNumber =  AllocatePhysicPageNumber();
+        if(physicPageNumber < 0)
+        {
+            cerr << "No free physical page " << fileName << endl;
+            return FALSE;
+        }
+        else
+        {
+            pageTable[i].virtualPage = i;
+            pageTable[i].physicalPage = physicPageNumber;
+            pageTable[i].valid = true;
+            pageTable[i].readOnly = false;
+            pageTable[i].use = false;
+            pageTable[i].dirty = false;
+        }
+    }
 
-// then, copy in the code and data segments into memory
-// Note: this code assumes that virtual address = physical address
+    // then, copy in the code and data segments into memory
+    // Note: this code assumes that virtual address = physical address
     if (noffH.code.size > 0)
     {
         DEBUG(dbgAddr, "Initializing code segment.");
         DEBUG(dbgAddr, noffH.code.virtualAddr << ", " << noffH.code.size);
-
-        executable->ReadAt(
-            &(kernel->machine->mainMemory[noffH.code.virtualAddr]),
-            noffH.code.size, noffH.code.inFileAddr);
+        if(!LoadIntoPage(executable, noffH.code))
+        {
+            return FALSE;
+        }
     }
+
     if (noffH.initData.size > 0)
     {
         DEBUG(dbgAddr, "Initializing data segment.");
         DEBUG(dbgAddr, noffH.initData.virtualAddr << ", " << noffH.initData.size);
-
-        executable->ReadAt(
-            &(kernel->machine->mainMemory[noffH.initData.virtualAddr]),
-            noffH.initData.size, noffH.initData.inFileAddr);
+        if(!LoadIntoPage(executable, noffH.initData))
+        {
+            return FALSE;
+        }
     }
 
 #ifdef RDATA
@@ -170,14 +196,71 @@ AddrSpace::Load(char *fileName)
     {
         DEBUG(dbgAddr, "Initializing read only data segment.");
         DEBUG(dbgAddr, noffH.readonlyData.virtualAddr << ", " << noffH.readonlyData.size);
-        executable->ReadAt(
-            &(kernel->machine->mainMemory[noffH.readonlyData.virtualAddr]),
-            noffH.readonlyData.size, noffH.readonlyData.inFileAddr);
+        if(!LoadIntoPage(executable, noffH.readonlyData))
+        {
+            return FALSE;
+        }
     }
 #endif
 
     delete executable;			// close file
     return TRUE;			// success
+}
+
+bool
+AddrSpace::LoadIntoPage(OpenFile *executable, Segment segment)
+{
+    int remainBytes = segment.size;
+    unsigned int fileOffset = segment.inFileAddr;
+    unsigned int curAddr = segment.virtualAddr;
+    
+    while(remainBytes > 0){
+        
+        int loadChunkSize = (remainBytes - PageSize < 0) ? remainBytes : PageSize;
+        unsigned int pAddr;
+        ExceptionType result = Translate(curAddr, &pAddr, TRUE);
+        switch(result)
+        {
+        case AddressErrorException:
+            DEBUG(dbgAddr, "LoadIntoPage(): AddressErrorException");
+            return false;
+            break;
+        case ReadOnlyException:
+            DEBUG(dbgAddr, "LoadIntoPage(): ReadOnlyException");
+            return false;
+            break;
+        case BusErrorException:
+            DEBUG(dbgAddr, "LoadIntoPage(): BusError");
+            return false;
+        default:
+            break;
+        }
+
+        executable->ReadAt(
+          &(kernel->machine->mainMemory[pAddr]),
+          loadChunkSize, fileOffset);
+        
+        remainBytes -= loadChunkSize;
+        curAddr += loadChunkSize;
+        fileOffset += loadChunkSize;
+    }
+
+    return true;
+}
+
+int 
+AddrSpace::AllocatePhysicPageNumber()
+{
+    // Find free page
+    for(int i = 0; i < NumPhysPages; i++)
+    {
+        if(!physicPages[i])
+        {
+            physicPages[i] = true;
+            return i;
+        }
+    }
+    return -1;
 }
 
 //----------------------------------------------------------------------

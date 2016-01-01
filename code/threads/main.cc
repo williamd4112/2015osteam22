@@ -49,7 +49,7 @@
 // global variables
 Kernel *kernel;
 Debug *debug;
-
+FILE *logFile;
 
 //----------------------------------------------------------------------
 // Cleanup
@@ -260,7 +260,7 @@ main(int argc, char **argv)
 
     }
     debug = new Debug(debugArg);
-
+    logFile = fopen("log", "w");
     DEBUG(dbgThread, "Entering main");
 
     kernel = new Kernel(argc, argv);

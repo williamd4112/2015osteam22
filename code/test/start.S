@@ -195,6 +195,13 @@ PrintInt:
          j     $31
          .end PrintInt
          
+         .global Yield
+         .ent Yield
+Yield:
+         addiu $2, $0, SC_Yield
+         syscall
+         j     $31
+         .end Yield
 
 /* dummy function to keep gcc happy */
         .globl  __main

@@ -15,8 +15,11 @@
 
 #include "copyright.h"
 #include "filesys.h"
+#include "noff.h" 
 
 #define UserStackSize		1024 	// increase this as necessary!
+
+extern bool physicPages[NumPhysPages];
 
 class AddrSpace
 {
@@ -29,6 +32,8 @@ public:
     // return false if not found
 
     void Execute(char *fileName);             	// Run a program
+    bool LoadIntoPage(OpenFile *, Segment);
+    int AllocatePhysicPageNumber();
     // assumes the program has already
     // been loaded
 
@@ -39,7 +44,7 @@ public:
     // to physical address _paddr_. _mode_
     // is 0 for Read, 1 for Write.
     ExceptionType Translate(unsigned int vaddr, unsigned int *paddr, int mode);
-
+    
 private:
     TranslationEntry *pageTable;	// Assume linear page table translation
     // for now!

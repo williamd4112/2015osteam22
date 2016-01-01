@@ -62,10 +62,11 @@ Machine::Run()
     if (debug->IsEnabled('m'))
     {
         cout << "Starting program in thread: " << kernel->currentThread->getName();
-        cout << ", at time: " << kernel->stats->totalTicks << "\n";
+        cout << ", at time: " << kernel->stats->totalTicks << " Priority: " << kernel->currentThread->getPriority() << endl;
     }
 
     kernel->interrupt->setStatus(UserMode);
+    
     for (;;)
     {
         OneInstruction(instr);

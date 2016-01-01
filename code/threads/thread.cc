@@ -22,6 +22,8 @@
 #include "synch.h"
 #include "sysdep.h"
 
+#define INITIAL_GUESS 0
+
 // this is put at the top of the execution stack, for detecting stack overflows
 const int STACK_FENCEPOST = 0xdedbeef;
 
@@ -36,6 +38,10 @@ const int STACK_FENCEPOST = 0xdedbeef;
 Thread::Thread(char* threadName, int threadID)
 {
     ID = threadID;
+    priority = 0; // Default
+    cpuBurst = 0; 
+    guessCPUBurst = INITIAL_GUESS;
+    
     name = threadName;
     stackTop = NULL;
     stack = NULL;
@@ -67,6 +73,10 @@ Thread::~Thread()
     ASSERT(this != kernel->currentThread);
     if (stack != NULL)
         DeallocBoundedArray((char *) stack, StackSize * sizeof(int));
+    if (space != NULL)
+    {
+        delete space;   
+    }
 }
 
 //----------------------------------------------------------------------
@@ -101,7 +111,7 @@ Thread::Fork(VoidFunctionPtr func, void *arg)
 
     oldLevel = interrupt->SetLevel(IntOff);
     scheduler->ReadyToRun(this);	// ReadyToRun assumes that interrupts
-    // are disabled!
+                                        // are disabled!
     (void) interrupt->SetLevel(oldLevel);
 }
 
@@ -212,8 +222,15 @@ Thread::Yield ()
     nextThread = kernel->scheduler->FindNextToRun();
     if (nextThread != NULL)
     {
+        cpuBurst += kernel->stats->totalTicks - lastCPUTick;
+        readyToContextSwitch(nextThread, 1);
+
         kernel->scheduler->ReadyToRun(this);
         kernel->scheduler->Run(nextThread, FALSE);
+    }
+    else
+    {
+        DEBUG(dbgThread, "No next thread"  << name);
     }
     (void) kernel->interrupt->SetLevel(oldLevel);
 }
@@ -245,16 +262,19 @@ Thread::Sleep (bool finishing)
 
     ASSERT(this == kernel->currentThread);
     ASSERT(kernel->interrupt->getLevel() == IntOff);
-
-    DEBUG(dbgThread, "Sleeping thread: " << name);
-
+    
+    fprintf(logFile, "Tick %d: Thread %d Sleep\n",kernel->stats->totalTicks,kernel->currentThread->getID());
+    cpuBurst += kernel->stats->totalTicks - lastCPUTick;   
+    guessCPUBurst = ((double)cpuBurst + guessCPUBurst) * 0.5;    
     status = BLOCKED;
-    //cout << "debug Thread::Sleep " << name << "wait for Idle\n";
+     
     while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL)
     {
         kernel->interrupt->Idle();	// no one to run, wait for an interrupt
     }
-    // returns when it's time for us to run
+
+    readyToContextSwitch(nextThread, 0);
+    cpuBurst = 0;
     kernel->scheduler->Run(nextThread, finishing);
 }
 
@@ -376,6 +396,22 @@ Thread::StackAllocate (VoidFunctionPtr func, void *arg)
     machineState[WhenDonePCState] = (void*)ThreadFinish;
 #endif
 }
+
+//----------------------------------------------------------------------
+// Thread::readyToContextSwitch
+//----------------------------------------------------------------------
+void
+Thread::readyToContextSwitch(Thread *nextThread, int type)
+{
+    fprintf(logFile, "Tick %d: Thread %d is replaced, and it has executed %d ticks\n",
+            kernel->stats->totalTicks,
+            kernel->currentThread->getID(),
+            kernel->currentThread->cpuBurst);
+    fprintf(logFile, "Tick %d: Thread %d is now selcted for execution\n",
+      kernel->stats->totalTicks,
+      nextThread->getID());
+}
+
 
 #include "machine.h"
 

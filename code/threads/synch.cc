@@ -108,12 +108,11 @@ Semaphore::V()
     // disable interrupts
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
-    if (!queue->IsEmpty())    // make thread ready.
+    if (!queue->IsEmpty())    // make thread ready. (wake up waiting thread)
     {
         kernel->scheduler->ReadyToRun(queue->RemoveFront());
     }
     value++;
-
     // re-enable interrupts
     (void) interrupt->SetLevel(oldLevel);
 }
@@ -184,6 +183,7 @@ Lock::~Lock()
 
 void Lock::Acquire()
 {
+    DEBUG(dbgInt, kernel->currentThread->getName() << " acquire lock\n");
     semaphore->P();
     lockHolder = kernel->currentThread;
 }
@@ -201,6 +201,7 @@ void Lock::Acquire()
 
 void Lock::Release()
 {
+    DEBUG(dbgInt, kernel->currentThread->getName() << " release lock\n");
     ASSERT(IsHeldByCurrentThread());
     lockHolder = NULL;
     semaphore->V();

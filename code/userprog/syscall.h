@@ -37,6 +37,8 @@
 #define SC_Add		42
 #define SC_MSG		100
 #define SC_PrintInt     101
+#define SC_Yield        102
+#define SC_Sleep        103
 
 #ifndef IN_ASM
 

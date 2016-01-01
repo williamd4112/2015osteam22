@@ -41,8 +41,7 @@ private:
     char *enableFlags;		// controls which DEBUG messages are printed
 };
 
-extern Debug *debug;
-
+extern Debug *debug; 			 
 
 //----------------------------------------------------------------------
 // DEBUG

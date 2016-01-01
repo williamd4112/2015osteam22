@@ -95,6 +95,12 @@ public:
     {
         return level;
     }
+    
+    bool isInHandler()
+    {
+        return inHandler;
+    }
+
     // Return whether interrupts
     // are enabled or disabled
 
@@ -107,12 +113,13 @@ public:
     void PrintInt(int number);
     int CreateFile(char *filename);
     int OpenFile(char *filename);
-    int WriteFile(char *buffer, int size, int id);
-    int ReadFile(char *buffer, int size, int id);
-    int CloseFile(int id);
+    int WriteFile(char *buffer, int size, OpenFileId id);
+    int ReadFile(char *buffer, int size, OpenFileId id);
+    int CloseFile(OpenFileId id);
+    void Yield();
 
     void YieldOnReturn();	// cause a context switch on return
-    // from an interrupt handler
+                                // from an interrupt handler
 
     MachineStatus getStatus()
     {

@@ -8,6 +8,7 @@
 #ifndef KERNEL_H
 #define KERNEL_H
 
+#include <cstdio>
 #include "copyright.h"
 #include "debug.h"
 #include "utility.h"
@@ -19,13 +20,15 @@
 #include "filesys.h"
 #include "machine.h"
 
+extern FILE *logFile;
+
+#define LOG(expr) fprintf(logFile, expr);
+
 class PostOfficeInput;
 class PostOfficeOutput;
 class SynchConsoleInput;
 class SynchConsoleOutput;
 class SynchDisk;
-
-
 
 class Kernel
 {
@@ -38,7 +41,7 @@ public:
     // from constructor because
     // refers to "kernel" as a global
     void ExecAll();
-    int Exec(char* name);
+    int Exec(char* name, int execfileIndex);
     void ThreadSelfTest();	// self test of threads and synchronization
 
     void ConsoleTest();         // interactive console self test
@@ -47,7 +50,8 @@ public:
     {
         return t[threadID];
     }
-
+    
+    void PrintInt(int number);
     int CreateFile(char* filename); // fileSystem call
     int OpenFile(char* filename); // fileSystem call
     int WriteFile(char *buffer, int size, int id);
@@ -75,6 +79,7 @@ private:
 
     Thread* t[10];
     char*   execfile[10];
+    int execfileInitPriority[10];
     int execfileNum;
     int threadNum;
     bool randomSlice;		// enable pseudo-random time slicing

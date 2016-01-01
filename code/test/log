@@ -1,0 +1,13 @@
+Tick 10: Thread 1 is inserted into queue L1 (EST: 0.000000, PRI: 102)
+Tick 20: Thread 0 Sleep
+Tick 20: Thread 1 is removed from queue L1 (EST: 0.000000, PRI: 102)
+Tick 20: Thread 0 is replaced, and it has executed 20 ticks
+Tick 20: Thread 1 is now selcted for execution
+Tick 132: Thread 1: 5
+
+Tick 132: Thread 1 Sleep
+Tick 232: Thread 1 is inserted into queue L1 (EST: 56.000000, PRI: 102)
+Tick 232: Thread 1 is removed from queue L1 (EST: 56.000000, PRI: 102)
+Tick 232: Thread 1 is replaced, and it has executed 112 ticks
+Tick 232: Thread 1 is now selcted for execution
+Tick 263: Thread 1 Sleep

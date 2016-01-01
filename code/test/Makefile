@@ -112,8 +112,8 @@ ifeq ($(hosttype),unknown)
 PROGRAMS = unknownhost
 else
 # change this if you create a new test program!
-#PROGRAMS = add halt shell matmult sort segments test1 test2 a
-PROGRAMS = add halt consoleIO_test1 consoleIO_test2 fileIO_test1 fileIO_test2
+#PROGRAMS = add add_1 add_2 add_3 adds_1 adds_2 adds_3 halt shell matmult sort segments test1 test2 a
+PROGRAMS = add add_1 add_2 add_3 add_4 add_5 add_6 adds_1 adds_2 adds_3 iobound halt consoleIO_test1 consoleIO_test2 fileIO_test1 fileIO_test2
 endif
 
 all: $(PROGRAMS)
@@ -127,12 +127,81 @@ halt: halt.o start.o
 	$(LD) $(LDFLAGS) start.o halt.o -o halt.coff
 	$(COFF2NOFF) halt.coff halt
 
+iobound.o: iobound.c
+	$(CC) $(CFLAGS) -c iobound.c
+
+iobound: iobound.o start.o
+	$(LD) $(LDFLAGS) start.o iobound.o -o iobound.coff
+	$(COFF2NOFF) iobound.coff iobound
 add.o: add.c
 	$(CC) $(CFLAGS) -c add.c
 
 add: add.o start.o
 	$(LD) $(LDFLAGS) start.o add.o -o add.coff
 	$(COFF2NOFF) add.coff add
+
+add_1.o: add_1.c
+	$(CC) $(CFLAGS) -c add_1.c
+
+add_1: add_1.o start.o
+	$(LD) $(LDFLAGS) start.o add_1.o -o add_1.coff
+	$(COFF2NOFF) add_1.coff add_1
+
+add_2.o: add_2.c
+	$(CC) $(CFLAGS) -c add_2.c
+
+add_2: add_2.o start.o
+	$(LD) $(LDFLAGS) start.o add_2.o -o add_2.coff
+	$(COFF2NOFF) add_2.coff add_2
+
+add_3.o: add_3.c
+	$(CC) $(CFLAGS) -c add_3.c
+
+add_3: add_3.o start.o
+	$(LD) $(LDFLAGS) start.o add_3.o -o add_3.coff
+	$(COFF2NOFF) add_3.coff add_3
+
+add_4.o: add_4.c
+	$(CC) $(CFLAGS) -c add_4.c
+
+add_4: add_4.o start.o
+	$(LD) $(LDFLAGS) start.o add_4.o -o add_4.coff
+	$(COFF2NOFF) add_4.coff add_4
+
+add_5.o: add_5.c
+	$(CC) $(CFLAGS) -c add_5.c
+
+add_5: add_5.o start.o
+	$(LD) $(LDFLAGS) start.o add_5.o -o add_5.coff
+	$(COFF2NOFF) add_5.coff add_5
+
+add_6.o: add_6.c
+	$(CC) $(CFLAGS) -c add_6.c
+
+add_6: add_6.o start.o
+	$(LD) $(LDFLAGS) start.o add_6.o -o add_6.coff
+	$(COFF2NOFF) add_6.coff add_6
+
+adds_1.o: adds_1.c
+	$(CC) $(CFLAGS) -c adds_1.c
+
+adds_1: adds_1.o start.o
+	$(LD) $(LDFLAGS) start.o adds_1.o -o adds_1.coff
+	$(COFF2NOFF) adds_1.coff adds_1
+
+adds_2.o: adds_2.c
+	$(CC) $(CFLAGS) -c adds_2.c
+
+adds_2: adds_2.o start.o
+	$(LD) $(LDFLAGS) start.o adds_2.o -o adds_2.coff
+	$(COFF2NOFF) adds_2.coff adds_2
+
+adds_3.o: adds_3.c
+	$(CC) $(CFLAGS) -c adds_3.c
+
+adds_3: adds_3.o start.o
+	$(LD) $(LDFLAGS) start.o adds_3.o -o adds_3.coff
+	$(COFF2NOFF) adds_3.coff adds_3
 
 shell.o: shell.c
 	$(CC) $(CFLAGS) -c shell.c

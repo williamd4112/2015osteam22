@@ -23,6 +23,64 @@
 #include "scheduler.h"
 #include "main.h"
 
+#define LEVEL_SJF 2
+#define LEVEL_PRIORITY 1 
+#define LEVEL_RR 0
+
+//---------------------------------------------------------------------
+// CompareThreadID
+//--------------------------------------------------------------------
+int CompareThreadID(Thread *t1, Thread *t2)
+{
+    int t1ID = t1->getID();
+    int t2ID = t2->getID();
+
+    if(t1ID < t2ID)
+        return -1;
+    else if(t1ID > t2ID)
+        return 1;
+    else
+        return 0;
+}
+
+//----------------------------------------------------------------------
+// ComaprePriority
+//----------------------------------------------------------------------
+int ComparePriority(Thread *t1, Thread *t2)
+{
+    ASSERT(t1 != NULL && t2 != NULL);
+    
+    // Mult -1 since sorted list always return smallest element
+    // but we want higher prirority return first
+    int p1 = -t1->getPriority();
+    int p2 = -t2->getPriority();
+    
+    if(p1 < p2)
+        return -1;
+    else if(p1 > p2)
+        return 1;
+    else
+        return CompareThreadID(t1, t2);
+}
+
+//----------------------------------------------------------------------
+// ComapreSJF
+//----------------------------------------------------------------------
+int CompareSJF(Thread *t1, Thread *t2)
+{
+    ASSERT(t1 != NULL && t2 != NULL);
+    
+    int g1 = t1->getGuessCPUBurst();
+    int g2 = t2->getGuessCPUBurst();
+    
+    if(g1 < g2)
+        return -1;
+    else if(g1 > g2)
+        return 1;
+    else
+        return CompareThreadID(t1, t2);
+}
+
 //----------------------------------------------------------------------
 // Scheduler::Scheduler
 // 	Initialize the list of ready but not running threads.
@@ -32,6 +90,9 @@
 Scheduler::Scheduler()
 {
     readyList = new List<Thread *>;
+    priorityList = new SortedList<Thread *>(ComparePriority);
+    sjfList = new SortedList<Thread *>(CompareSJF);
+
     toBeDestroyed = NULL;
 }
 
@@ -43,6 +104,8 @@ Scheduler::Scheduler()
 Scheduler::~Scheduler()
 {
     delete readyList;
+    delete priorityList;
+    delete sjfList;
 }
 
 //----------------------------------------------------------------------
@@ -53,14 +116,49 @@ Scheduler::~Scheduler()
 //	"thread" is the thread to be put on the ready list.
 //----------------------------------------------------------------------
 
-void
+int
 Scheduler::ReadyToRun (Thread *thread)
 {
     ASSERT(kernel->interrupt->getLevel() == IntOff);
     DEBUG(dbgThread, "Putting thread on ready list: " << thread->getName());
-    //cout << "Putting thread on ready list: " << thread->getName() << endl ;
+    
+    ASSERT(thread->priority >= 0 && thread->priority < 150);
+
+    int tlevel = thread->priority / LEVEL_GAP;
+    thread->lastCPUTick = kernel->stats->totalTicks;
+
+    switch(tlevel)
+    {
+        case LEVEL_RR:
+            readyList->Append(thread);
+            break;
+        case LEVEL_PRIORITY:
+            priorityList->Insert(thread);
+            break;
+        case LEVEL_SJF:
+            sjfList->Insert(thread);
+            break;
+        default:
+            ASSERTNOTREACHED();
+            break;
+    }
+
+    fprintf(logFile, "Tick %d: Thread %d is inserted into queue L%d (EST: %lf, PRI: %d)\n",
+      kernel->stats->totalTicks,
+      thread->getID(),
+      3 - tlevel,
+      thread->getGuessCPUBurst(),
+      thread->getPriority());
+
     thread->setStatus(READY);
-    readyList->Append(thread);
+    
+    // only preempt when we are in interrupt handler
+    if(kernel->currentThread != thread && isPreempted(kernel->currentThread, thread))
+    {
+        kernel->interrupt->YieldOnReturn();
+    } 
+
+    return tlevel;
 }
 
 //----------------------------------------------------------------------
@@ -75,14 +173,42 @@ Thread *
 Scheduler::FindNextToRun ()
 {
     ASSERT(kernel->interrupt->getLevel() == IntOff);
+    
+    // Choose a queue
+    int printLevel = 0;
+    List<Thread *> *selectedList = NULL;
+    if(!sjfList->IsEmpty())
+    {
+        printLevel = 1;
+        selectedList = sjfList;  
+    }
+    else if(!priorityList->IsEmpty())
+    {
+        printLevel = 2;
+        selectedList = priorityList;
+    }
+    else if(!readyList->IsEmpty())
+    {
+        printLevel = 3;
+        selectedList = readyList;
+    }
 
-    if (readyList->IsEmpty())
+    // Pop element
+    if (selectedList == NULL)
     {
         return NULL;
     }
     else
     {
-        return readyList->RemoveFront();
+        Thread *thread = selectedList->RemoveFront();
+        fprintf(logFile, "Tick %d: Thread %d is removed from queue L%d (EST: %lf, PRI: %d)\n",
+          kernel->stats->totalTicks,
+          thread->getID(),
+          printLevel,
+          thread->getGuessCPUBurst(),
+          thread->getPriority());
+
+        return thread;
     }
 }
 
@@ -123,10 +249,11 @@ Scheduler::Run (Thread *nextThread, bool finishing)
     }
 
     oldThread->CheckOverflow();		    // check if the old thread
-    // had an undetected stack overflow
-
+                                            // had an undetected stack overflow
     kernel->currentThread = nextThread;  // switch to the next thread
+    
     nextThread->setStatus(RUNNING);      // nextThread is now running
+    nextThread->lastCPUTick = kernel->stats->totalTicks; // Mark IN CPU Tick
 
     DEBUG(dbgThread, "Switching from: " << oldThread->getName() << " to: " << nextThread->getName());
 
@@ -137,14 +264,15 @@ Scheduler::Run (Thread *nextThread, bool finishing)
 
     SWITCH(oldThread, nextThread);
 
-    // we're back, running oldThread
-
+    // we're back, running oldThread 
+    
     // interrupts are off when we return from switch!
     ASSERT(kernel->interrupt->getLevel() == IntOff);
-
-    DEBUG(dbgThread, "Now in thread: " << oldThread->getName());
+    
+    DEBUG(dbgThread, "Now in thread: " << oldThread->getName() << " Last Tick: " << kernel->currentThread->lastCPUTick);
 
     CheckToBeDestroyed();		// check if thread we were running
+    
     // before this one has finished
     // and needs to be cleaned up
 
@@ -168,9 +296,108 @@ Scheduler::CheckToBeDestroyed()
 {
     if (toBeDestroyed != NULL)
     {
+        DEBUG(dbgThread, "Destroy thread: " << toBeDestroyed->getName());
         delete toBeDestroyed;
         toBeDestroyed = NULL;
     }
+}
+
+//----------------------------------------------------------------------
+// Scheduler::Aging
+//----------------------------------------------------------------------
+void
+Scheduler::Aging()
+{
+    List<Thread *> *totalList[] = {readyList, priorityList, sjfList};
+
+    for(int i = 0; i < 3; i++)
+    {
+        for(ListIterator<Thread *> it(totalList[i]); !it.IsDone();)
+        {
+            Thread *t = it.Item();
+            ASSERT(t != NULL);
+             
+            if(kernel->stats->totalTicks - t->lastCPUTick >= 1500)
+            {
+                int p = t->getPriority();
+                int oldPriority = p;
+                t->setPriority((p = p + 10) < 150 ? p : (p = 149));
+                
+                it.Next();
+
+                fprintf(logFile, "Tick %d: Thread %d changes its priority from %d to %d\n",
+                      kernel->stats->totalTicks,
+                      t->getID(),
+                      oldPriority,
+                      p);
+                
+                // Ignore thread which priority is less than 50
+                if(t->getPriority() >= LEVEL_GAP)
+                {
+                    totalList[i]->Remove(t);
+                    ReadyToRun(t);
+                }
+                else
+                {
+                    // No reinsert to queue, so we reset lastCPUTick here
+                    t->lastCPUTick = kernel->stats->totalTicks;
+                }
+            }
+            else
+            {
+                it.Next();
+            }
+        }
+    }    
+}
+
+//----------------------------------------------------------------------
+// Scheduler::Demote
+//
+//----------------------------------------------------------------------
+void
+Scheduler::Demote()
+{
+    int burst;
+
+    // if cpu burst larger than the demote limit, lower its priority
+    if((burst = kernel->stats->totalTicks - kernel->currentThread->lastCPUTick) >= DEMOTE_LIMIT_TICK)
+    {
+        kernel->currentThread->lastCPUTick = kernel->stats->totalTicks;
+        kernel->currentThread->cpuBurst += burst;
+        
+        int tlevel = kernel->currentThread->priority / LEVEL_GAP;
+        if(tlevel > 0)
+        {
+            int oldPriority = kernel->currentThread->priority;
+            kernel->currentThread->priority = (tlevel) * LEVEL_GAP - 1;
+            kernel->interrupt->YieldOnReturn();
+            
+            fprintf(logFile, "Tick %d: Thread %d changes its priority from %d to %d\n",
+                      kernel->stats->totalTicks,
+                      kernel->currentThread->getID(),
+                      oldPriority,
+                      kernel->currentThread->priority);
+        }
+    }
+}
+
+
+//----------------------------------------------------------------------
+// Scheduler::isPreempted
+//
+//----------------------------------------------------------------------
+bool Scheduler::isPreempted(Thread *cur, Thread *preempt)
+{
+    ASSERT(cur != NULL && preempt != NULL);
+
+    static int L1_LOWERBOUND = LEVEL_GAP * (3 - 1);
+
+    if(cur->getPriority() >= L1_LOWERBOUND && preempt->getPriority() >= L1_LOWERBOUND)
+        return CompareSJF(preempt, cur) < 0; // true: preempt guess < cur guess or preempt id < cur id    
+    else
+        return ComparePriority(preempt, cur) < 0; // true: preeempt pri > cur pri or preempt id < cur id
+    
 }
 
 //----------------------------------------------------------------------
@@ -184,3 +411,4 @@ Scheduler::Print()
     cout << "Ready list contents:\n";
     readyList->Apply(ThreadPrint);
 }
+

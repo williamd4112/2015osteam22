@@ -114,6 +114,7 @@ void
 SynchConsoleOutput::PutString(char *str, int len)
 {
     lock->Acquire();
+    fprintf(logFile, "Tick %d: Thread %d: %s\n",kernel->stats->totalTicks,kernel->currentThread->getID(),str);
     consoleOutput->PutString(str, len);
     waitFor->P();
     lock->Release();

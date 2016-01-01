@@ -17,6 +17,8 @@
 #include "synchdisk.h"
 #include "post.h"
 #include "synchconsole.h"
+#include "syscall.h"
+
 
 //----------------------------------------------------------------------
 // Kernel::Kernel
@@ -55,6 +57,13 @@ Kernel::Kernel(int argc, char **argv)
         {
             execfile[++execfileNum]= argv[++i];
             cout << execfile[execfileNum] << "\n";
+        }
+        else if(strcmp(argv[i], "-ep") == 0)
+        {
+            ASSERT(i + 2 < argc);
+            execfile[++execfileNum]= argv[++i];
+            sscanf(argv[++i], "%d", &execfileInitPriority[execfileNum]); 
+            printf("%d: %s PRI: %d\n",execfileNum, execfile[execfileNum], execfileInitPriority[execfileNum]);
         }
         else if (strcmp(argv[i], "-ci") == 0)
         {
@@ -95,7 +104,7 @@ Kernel::Kernel(int argc, char **argv)
             cout << "Partial usage: nachos [-nf]\n";
 #endif
             cout << "Partial usage: nachos [-n #] [-m #]\n";
-        }
+        } 
     }
 }
 
@@ -130,10 +139,11 @@ Kernel::Initialize()
 #else
     fileSystem = new FileSystem(formatFlag);
 #endif // FILESYS_STUB
-    postOfficeIn = new PostOfficeInput(10);
-    postOfficeOut = new PostOfficeOutput(reliability);
+    //postOfficeIn = new PostOfficeInput(10);
+    //postOfficeOut = new PostOfficeOutput(reliability);
 
     interrupt->Enable();
+    memset(physicPages, 0, sizeof(physicPages));
 }
 
 //----------------------------------------------------------------------
@@ -280,6 +290,7 @@ void ForkExecute(Thread *t)
         return;             // executable not found
     }
 
+    DEBUG(dbgThread, "ForkExecute: " << t->getName());
     t->space->Execute(t->getName());
 
 }
@@ -288,18 +299,20 @@ void Kernel::ExecAll()
 {
     for (int i=1; i<=execfileNum; i++)
     {
-        int a = Exec(execfile[i]);
+        int a = Exec(execfile[i], i);
     }
     currentThread->Finish();
     //Kernel::Exec();
 }
 
 
-int Kernel::Exec(char* name)
+int Kernel::Exec(char* name, int execFileIndex)
 {
     t[threadNum] = new Thread(name, threadNum);
+    t[threadNum]->setPriority(execfileInitPriority[execFileIndex]);
     t[threadNum]->space = new AddrSpace();
     t[threadNum]->Fork((VoidFunctionPtr) &ForkExecute, (void *)t[threadNum]);
+    
     threadNum++;
 
     return threadNum-1;
@@ -328,6 +341,22 @@ int Kernel::Exec(char* name)
 //	currentThread->Finish();
 //    Kernel::Run();
 //  cout << "after ThreadedKernel:Run();" << endl;  // unreachable
+}
+
+void Kernel::PrintInt(int number)
+{
+    static int MAXINT_LEN = 32;
+    
+    int i = MAXINT_LEN - 1;
+    char buff[MAXINT_LEN + 1];
+    buff[MAXINT_LEN] = '\n';
+    do
+    {
+        buff[i--] = (char)(number % 10) + '0';
+        number /= 10;
+    }while(number && i >= 0);
+
+    synchConsoleOut->PutString(buff + i + 1, MAXINT_LEN - i);
 }
 
 int Kernel::CreateFile(char *filename)
@@ -361,12 +390,12 @@ int Kernel::OpenFile(char *filename)
     return vfd;
 }
 
-int Kernel::WriteFile(char *buffer, int size, int id)
+int Kernel::WriteFile(char *buffer, int size, OpenFileId id)
 {
     return fileSystem->Write(buffer, size, id);
 }
 
-int Kernel::ReadFile(char *buffer, int size, int id)
+int Kernel::ReadFile(char *buffer, int size, OpenFileId id)
 {
     return fileSystem->Read(buffer, size, id);
 }

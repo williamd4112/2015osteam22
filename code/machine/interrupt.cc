@@ -24,6 +24,7 @@
 #include "interrupt.h"
 #include "main.h"
 #include "synchconsole.h"
+#include "syscall.h"
 
 // String definitions for debugging messages
 
@@ -174,9 +175,12 @@ Interrupt::OneTick()
         stats->totalTicks += UserTick;
         stats->userTicks += UserTick;
     }
-    DEBUG(dbgInt, "== Tick " << stats->totalTicks << " ==");
-// check any pending interrupts are now ready to fire
+
+    DEBUG(dbgInt, "\n== Tick " << stats->totalTicks << " / " << stats->userTicks << " ==");
+    
+    // check any pending interrupts are now ready to fire
     ChangeLevel(IntOn, IntOff);	// first, turn off interrupts
+    
     // (interrupt handlers run with
     // interrupts disabled)
     CheckIfDue(FALSE);		// check for pending interrupts
@@ -205,6 +209,7 @@ Interrupt::OneTick()
 void
 Interrupt::YieldOnReturn()
 {
+    if(!inHandler) return;
     ASSERT(inHandler == TRUE);
     yieldOnReturn = TRUE;
 }
@@ -225,7 +230,7 @@ Interrupt::Idle()
 {
     DEBUG(dbgInt, "Machine idling; checking for interrupts.");
     status = IdleMode;
-    if (CheckIfDue(TRUE))  	// check for any pending interrupts
+    if (CheckIfDue(TRUE))  	// check for any pending interrupts (return true means that we found an interrupt)
     {
         status = SystemMode;
         return;			// return in case there's now
@@ -277,21 +282,30 @@ Interrupt::OpenFile(char *filename)
 //      Open a file and return the status
 //----------------------------------------------------------------------
 int 
-Interrupt::WriteFile(char *buffer, int size, int id)
+Interrupt::WriteFile(char *buffer, int size, OpenFileId id)
 {
     return kernel->WriteFile(buffer, size, id);
 }
 
 int
-Interrupt::ReadFile(char *buffer, int size, int id)
+Interrupt::ReadFile(char *buffer, int size, OpenFileId id)
 {
     return kernel->ReadFile(buffer, size, id);
 }
 
 int
-Interrupt::CloseFile(int id)
+Interrupt::CloseFile(OpenFileId id)
 {
     return kernel->CloseFile(id);
+}
+
+void
+Interrupt::Yield()
+{
+    bool oldInHandler = inHandler;
+    inHandler = TRUE;
+    YieldOnReturn();
+    inHandler = oldInHandler;;
 }
 
 //----------------------------------------------------------------------
@@ -395,9 +409,7 @@ Interrupt::CheckIfDue(bool advanceClock)
 void
 Interrupt::PrintInt(int num)
 {
-    char str[31];
-    int len = snprintf(str, 29, "%d\n",num);
-    kernel->synchConsoleOut->PutString(str, len);
+    kernel->PrintInt(num);
 }
 
 //----------------------------------------------------------------------
@@ -410,7 +422,7 @@ static void
 PrintPending (PendingInterrupt *pending)
 {
     cout << "Interrupt handler "<< intTypeNames[pending->type];
-    cout << ", scheduled at " << pending->when;
+    cout << ", scheduled at " << pending->when << endl;
 }
 
 //----------------------------------------------------------------------
