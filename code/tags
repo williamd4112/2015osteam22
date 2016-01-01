@@ -3,7 +3,7 @@
 !_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
-!_TAG_PROGRAM_VERSION	5.8	//
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
 A	test/matmult.c	/^int A[Dim][Dim];$/;"	v
 A	test/sort.c	/^int A[SIZE];	\/* size of physical memory; with code, we'll run out of space!*\/$/;"	v
 ADDRSPACE_H	userprog/addrspace.h	14;"	d
@@ -102,6 +102,7 @@ CloseFile	threads/kernel.cc	/^int Kernel::CloseFile(int id)$/;"	f	class:Kernel
 CloseSocket	lib/sysdep.cc	/^CloseSocket(int sockID)$/;"	f
 ComparePriority	threads/scheduler.cc	/^int ComparePriority(Thread *t1, Thread *t2)$/;"	f
 CompareSJF	threads/scheduler.cc	/^int CompareSJF(Thread *t1, Thread *t2)$/;"	f
+CompareThreadID	threads/scheduler.cc	/^int CompareThreadID(Thread *t1, Thread *t2)$/;"	f
 ComputeLatency	machine/disk.cc	/^Disk::ComputeLatency(int newSector, bool writing)$/;"	f	class:Disk
 Condition	threads/synch.cc	/^Condition::Condition(char* debugName)$/;"	f	class:Condition
 Condition	threads/synch.h	/^class Condition$/;"	c
@@ -394,9 +395,6 @@ Join	test/start.S	/^Join:$/;"	l
 KERNEL_H	threads/kernel.h	9;"	d
 Kernel	threads/kernel.cc	/^Kernel::Kernel(int argc, char **argv)$/;"	f	class:Kernel
 Kernel	threads/kernel.h	/^class Kernel$/;"	c
-L1_SJF	threads/scheduler.h	/^    L1_SJF,$/;"	e	enum:QueueLevel
-L2_PRIORITY	threads/scheduler.h	/^    L2_PRIORITY,$/;"	e	enum:QueueLevel
-L3_RR	threads/scheduler.h	/^    L3_RR$/;"	e	enum:QueueLevel
 LD	build.cygwin/Makefile	/^LD = g++$/;"	m
 LD	build.linux/Makefile	/^LD = g++$/;"	m
 LD	build.macosx/Makefile	/^LD = g++$/;"	m
@@ -621,7 +619,7 @@ POST_H	network/post.h	28;"	d
 PROGRAM	build.cygwin/Makefile	/^PROGRAM = nachos$/;"	m
 PROGRAM	build.linux/Makefile	/^PROGRAM = nachos$/;"	m
 PROGRAM	build.macosx/Makefile	/^PROGRAM = nachos$/;"	m
-PROGRAMS	test/Makefile	/^PROGRAMS = add add_1 add_2 add_3 add_4 adds_1 adds_2 adds_3 halt consoleIO_test1 consoleIO_test2 fileIO_test1 fileIO_test2$/;"	m
+PROGRAMS	test/Makefile	/^PROGRAMS = add add_1 add_2 add_3 add_4 add_5 add_6 adds_1 adds_2 adds_3 iobound halt consoleIO_test1 consoleIO_test2 fileIO_test1 fileIO_test2$/;"	m
 PROGRAMS	test/Makefile	/^PROGRAMS = unknownhost$/;"	m
 PacketHeader	machine/network.h	/^class PacketHeader$/;"	c
 PageFaultException	machine/machine.h	/^                     PageFaultException,    \/\/ No valid translation found$/;"	e	enum:ExceptionType
@@ -661,8 +659,6 @@ PutChar	machine/console.cc	/^ConsoleOutput::PutChar(char ch)$/;"	f	class:Console
 PutChar	userprog/synchconsole.cc	/^SynchConsoleOutput::PutChar(char ch)$/;"	f	class:SynchConsoleOutput
 PutString	machine/console.cc	/^ConsoleOutput::PutString(char *str, int len)$/;"	f	class:ConsoleOutput
 PutString	userprog/synchconsole.cc	/^SynchConsoleOutput::PutString(char *str, int len)$/;"	f	class:SynchConsoleOutput
-QueueLevel	threads/scheduler.h	/^typedef enum QueueLevel$/;"	g
-QueueLevel	threads/scheduler.h	/^}QueueLevel;$/;"	t	typeref:enum:QueueLevel
 R31	machine/mipssim.h	97;"	d
 RD	machine/mipssim.h	/^enum RegType { NONE, RS, RT, RD, EXTRA };$/;"	e	enum:RegType
 READY	threads/thread.h	/^enum ThreadStatus { JUST_CREATED, RUNNING, READY, BLOCKED, ZOMBIE };$/;"	e	enum:ThreadStatus
@@ -1059,7 +1055,6 @@ getGuessCPUBurst	threads/thread.h	/^    double getGuessCPUBurst()$/;"	f	class:Th
 getID	threads/thread.h	/^    int getID()$/;"	f	class:Thread
 getKey	lib/hash.h	/^    Key (*getKey)(T x);		\/\/ get Key from value$/;"	m	class:HashTable
 getLevel	machine/interrupt.h	/^    IntStatus getLevel()$/;"	f	class:Interrupt
-getLevel	threads/scheduler.cc	/^Scheduler::getLevel()$/;"	f	class:Scheduler
 getName	threads/synch.h	/^    char* getName()$/;"	f	class:Condition
 getName	threads/synch.h	/^    char* getName()$/;"	f	class:Lock
 getName	threads/synch.h	/^    char* getName()$/;"	f	class:Semaphore
@@ -1097,7 +1092,6 @@ lastSector	machine/disk.h	/^    int lastSector;			\/\/ The previous disk request
 length	machine/network.h	/^    unsigned length;	 	\/\/ bytes of packet data, excluding the$/;"	m	class:PacketHeader
 length	network/post.h	/^    unsigned length;		\/\/ Bytes of message data (excluding the$/;"	m	class:MailHeader
 level	machine/interrupt.h	/^    IntStatus level;		\/\/ are interrupts enabled or disabled?$/;"	m	class:Interrupt
-level	threads/scheduler.h	/^    QueueLevel level;$/;"	m	class:Scheduler
 list	threads/synchlist.h	/^    List<T> *list;		\/\/ the list of things$/;"	m	class:SynchList
 listEmpty	threads/synchlist.h	/^    Condition *listEmpty;	\/\/ wait in Remove if the list is empty$/;"	m	class:SynchList
 listTestVector	lib/libtest.cc	/^static int listTestVector[] = { 9, 5, 7 };$/;"	v	file:
@@ -1115,6 +1109,8 @@ main	test/add_1.c	/^main()$/;"	f
 main	test/add_2.c	/^main()$/;"	f
 main	test/add_3.c	/^main()$/;"	f
 main	test/add_4.c	/^main()$/;"	f
+main	test/add_5.c	/^main()$/;"	f
+main	test/add_6.c	/^main()$/;"	f
 main	test/adds_1.c	/^main()$/;"	f
 main	test/adds_2.c	/^main()$/;"	f
 main	test/adds_3.c	/^main()$/;"	f
@@ -1123,6 +1119,7 @@ main	test/consoleIO_test2.c	/^main()$/;"	f
 main	test/fileIO_test1.c	/^int main(void)$/;"	f
 main	test/fileIO_test2.c	/^int main(void)$/;"	f
 main	test/halt.c	/^main()$/;"	f
+main	test/iobound.c	/^main()$/;"	f
 main	test/matmult.c	/^main()$/;"	f
 main	test/segments.c	/^main()$/;"	f
 main	test/shell.c	/^main()$/;"	f
@@ -1194,7 +1191,6 @@ readyList	threads/scheduler.h	/^    List<Thread *> *readyList;  \/\/ queue of th
 readyToContextSwitch	threads/thread.cc	/^Thread::readyToContextSwitch(Thread *nextThread, int type)$/;"	f	class:Thread
 registers	machine/machine.h	/^    int registers[NumTotalRegs]; \/\/ CPU registers, for executing user programs$/;"	m	class:Machine
 reliability	threads/kernel.h	/^    double reliability;         \/\/ likelihood messages are dropped$/;"	m	class:Kernel
-resetOnBack	threads/thread.h	/^    bool resetOnBack; \/\/ Reset cpu burst on back from BLOCKED$/;"	m	class:Thread
 rs	machine/mipssim.cc	/^    char rs, rt, rd; \/\/ Three registers from instruction.$/;"	m	class:Instruction	file:
 rt	machine/mipssim.cc	/^    char rs, rt, rd; \/\/ Three registers from instruction.$/;"	m	class:Instruction	file:
 runUntilTime	machine/machine.h	/^    int runUntilTime;		\/\/ drop back into the debugger when simulated$/;"	m	class:Machine

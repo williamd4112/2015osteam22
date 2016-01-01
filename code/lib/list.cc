@@ -254,7 +254,7 @@ SortedList<T>::Insert(T item)
     ListElement<T> *element = new ListElement<T>(item);
     ListElement<T> *ptr;		// keep track
 
-    ASSERT(!IsInList(item));
+    ASSERT(!this->IsInList(item));
     if (this->IsEmpty())  			// if list is empty, put at front
     {
         this->first = element;
@@ -281,7 +281,7 @@ SortedList<T>::Insert(T item)
         this->last = element;
     }
     this->numInList++;
-    ASSERT(IsInList(item));
+    ASSERT(this->IsInList(item));
 }
 
 //----------------------------------------------------------------------
@@ -399,7 +399,7 @@ SortedList<T>::SelfTest(T *p, int numEntries)
     for (i = 0; i < numEntries; i++)
     {
         Insert(p[i]);
-        ASSERT(IsInList(p[i]));
+        ASSERT(this->IsInList(p[i]));
     }
     SanityCheck();
 
@@ -407,7 +407,7 @@ SortedList<T>::SelfTest(T *p, int numEntries)
     for (i = 0; i < numEntries; i++)
     {
         q[i] = this->RemoveFront();
-        ASSERT(!IsInList(q[i]));
+        ASSERT(!this->IsInList(q[i]));
     }
     ASSERT(this->IsEmpty());
 
