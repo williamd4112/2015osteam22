@@ -1,16 +1,16 @@
-/* errno.h
- *	Error codes for system calls.
- *
+/* errno.h 
+ *	Error codes for system calls.          
+ *      
  *	Do not modify the contents of this file.
  *
  *	Try to use the most descriptive error number for the error.
  *      You may find it helpful to see what errors equivalent UNIX
  *      system calls return under various error conditions.
- *      For example the man page for the write system call "man 2 write"
+ *      For example the man page for the write system call "man 2 write" 
  *      provides a list of different error number values for different
  *      conditions.
  *      NOTE: there are way more errors here than you should be supporting
- *            and many more error conditions listed in man pages than
+ *            and many more error conditions listed in man pages than 
  *            Nachos can possibly generate. The list here is to give you
  *            some ideas and to hopefully standardize on some error numbers.
  *
@@ -21,7 +21,7 @@
 #ifndef ERRNO_H
 #define ERRNO_H
 
-#include "copyright.h"
+#include "copyright.h"		
 
 #define EPERM            -1      /* Operation not permitted */
 #define ENOENT           -2      /* No such file or directory */

@@ -11,7 +11,7 @@
 
 /*
  Copyright (c) 1992-1996 The Regents of the University of California.
- All rights reserved.  See copyright.h for copyright notice and limitation
+ All rights reserved.  See copyright.h for copyright notice and limitation 
  of liability and disclaimer of warranty provisions.
  */
 
@@ -22,8 +22,8 @@
 
 #ifdef DECMIPS
 
-/* Registers that must be saved during a context switch.
- * These are the offsets from the beginning of the Thread object,
+/* Registers that must be saved during a context switch. 
+ * These are the offsets from the beginning of the Thread object, 
  * in bytes, used in switch.s
  */
 #define SP 0
@@ -64,7 +64,7 @@
 
 #ifdef SPARC
 
-/* Registers that must be saved during a context switch.  See comment above. */
+/* Registers that must be saved during a context switch.  See comment above. */ 
 #define I0 4
 #define I1 8
 #define I2 12
@@ -94,7 +94,7 @@
 
 #ifdef PARISC
 
-/* Registers that must be saved during a context switch.  See comment above. */
+/* Registers that must be saved during a context switch.  See comment above. */ 
 #define   SP   0
 #define   S0   4
 #define   S1   8
@@ -156,79 +156,79 @@
 
 #endif // x86
 
-#ifdef PowerPC
+#ifdef PowerPC 
 
-#define	SP	  0    // stack pointer 
-#define	P1	  4    // parameters
-#define	P2	  8
-#define	P3	 12
-#define 	P4	 16
-#define	GP13	 20    // general purpose registers 13-31
-#define	GP14	 24
-#define	GP15	 28
-#define	GP16	 32
-#define	GP17	 36
-#define	GP18	 40
-#define	GP19	 44
-#define	GP20	 48
-#define	GP21	 52
-#define	GP22	 56
-#define	GP23	 60
-#define	GP24	 64
-#define	GP25	 68
-#define	GP26	 72
-#define	GP27	 76
-#define	GP28	 80
-#define	GP29	 84
-#define	GP30	 88
-#define	GP31	 92
-#define	FP13	 96    // floating point registers 14-31
-#define	FP15	104
-#define	FP16	112
-#define	FP17	120
-#define	FP18	128
-#define	FP19	136
-#define	FP20	144
-#define	FP21	152
-#define	FP22	160
-#define	FP23	168
-#define	FP24	176
-#define	FP25	184
-#define	FP26	192
-#define	FP27	200
-#define	FP28	208
-#define	FP29	216
-#define	FP30	224
-#define	FP31	232
-#define	CR	240   // control register
-#define	LR	244   // link register
-#define	TOC	248   // Table Of Contents
+ #define	SP	  0    // stack pointer 
+ #define	P1	  4    // parameters
+ #define	P2	  8
+ #define	P3	 12
+ #define 	P4	 16 
+ #define	GP13	 20    // general purpose registers 13-31
+ #define	GP14	 24
+ #define	GP15	 28     
+ #define	GP16	 32
+ #define	GP17	 36
+ #define	GP18	 40  
+ #define	GP19	 44
+ #define	GP20	 48
+ #define	GP21	 52
+ #define	GP22	 56
+ #define	GP23	 60
+ #define	GP24	 64
+ #define	GP25	 68     
+ #define	GP26	 72
+ #define	GP27	 76
+ #define	GP28	 80  
+ #define	GP29	 84
+ #define	GP30	 88
+ #define	GP31	 92
+ #define	FP13	 96    // floating point registers 14-31
+ #define	FP15	104     
+ #define	FP16	112
+ #define	FP17	120
+ #define	FP18	128  
+ #define	FP19	136
+ #define	FP20	144
+ #define	FP21	152
+ #define	FP22	160
+ #define	FP23	168
+ #define	FP24	176
+ #define	FP25	184     
+ #define	FP26	192
+ #define	FP27	200
+ #define	FP28	208  
+ #define	FP29	216
+ #define	FP30	224
+ #define	FP31	232
+ #define	CR	240   // control register
+ #define	LR	244   // link register
+ #define	TOC	248   // Table Of Contents
 
 
-// for ThreadRoot assembly function
+ // for ThreadRoot assembly function 
 
-#define	InitialPCState	0  //  (P1/4 - 1)  // user function address 
-#define	InitialArgState	1  //  (P2/4 - 1)  // user function argument       
-#define	WhenDonePCState	2  //  (P3/4 - 1)  // clean up function addr 
-#define	StartupPCState	3  //  (P4/4 - 1)  // start up function addr 
-#define	PCState		60 //  (LR/4 - 1)  // ThreadRoot addr (first time).
-// Later PC addr when SWITCH
-// occured
-
-#define	InitialLR	21
-#define	InitialArg	22
-#define	WhenDoneLR	23
-#define	StartupLR	24
+ #define	InitialPCState	0  //  (P1/4 - 1)  // user function address 
+ #define	InitialArgState	1  //  (P2/4 - 1)  // user function argument       
+ #define	WhenDonePCState	2  //  (P3/4 - 1)  // clean up function addr 
+ #define	StartupPCState	3  //  (P4/4 - 1)  // start up function addr 
+ #define	PCState		60 //  (LR/4 - 1)  // ThreadRoot addr (first time).
+                                                   // Later PC addr when SWITCH 
+                                                   // occured
+                   
+ #define	InitialLR	21
+ #define	InitialArg	22
+ #define	WhenDoneLR	23
+ #define	StartupLR	24
 
 #endif  // PowerPC 
 
 #ifdef ALPHA
 
-/*
+/* 
  * Porting to Alpha was done by Shuichi Oikawa (shui@sfc.keio.ac.jp).
  */
-/* Registers that must be saved during a context switch.
- * These are the offsets from the beginning of the Thread object,
+/* Registers that must be saved during a context switch. 
+ * These are the offsets from the beginning of the Thread object, 
  * in bytes, used in switch.s
  */
 #define	SP	(0*8)
@@ -264,5 +264,5 @@
 #define StartupPCState	(S3/8-1)
 
 #endif // HOST_ALPHA
-
+ 
 #endif // SWITCH_H

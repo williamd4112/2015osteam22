@@ -1,9 +1,9 @@
-// synchconsole.cc
-//	Routines providing synchronized access to the keyboard
+// synchconsole.cc 
+//	Routines providing synchronized access to the keyboard 
 //	and console display hardware devices.
 //
 // Copyright (c) 1992-1996 The Regents of the University of California.
-// All rights reserved.  See copyright.h for copyright notice and limitation
+// All rights reserved.  See copyright.h for copyright notice and limitation 
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
@@ -30,9 +30,9 @@ SynchConsoleInput::SynchConsoleInput(char *inputFile)
 //----------------------------------------------------------------------
 
 SynchConsoleInput::~SynchConsoleInput()
-{
-    delete consoleInput;
-    delete lock;
+{ 
+    delete consoleInput; 
+    delete lock; 
     delete waitFor;
 }
 
@@ -86,9 +86,9 @@ SynchConsoleOutput::SynchConsoleOutput(char *outputFile)
 //----------------------------------------------------------------------
 
 SynchConsoleOutput::~SynchConsoleOutput()
-{
-    delete consoleOutput;
-    delete lock;
+{ 
+    delete consoleOutput; 
+    delete lock; 
     delete waitFor;
 }
 
@@ -107,22 +107,8 @@ SynchConsoleOutput::PutChar(char ch)
 }
 
 //----------------------------------------------------------------------
-// SynchConsoleOutput::PutString
-//      Write a string to the console display, waiting if necessary.
-//----------------------------------------------------------------------
-void
-SynchConsoleOutput::PutString(char *str, int len)
-{
-    lock->Acquire();
-    fprintf(logFile, "Tick %d: Thread %d: %s\n",kernel->stats->totalTicks,kernel->currentThread->getID(),str);
-    consoleOutput->PutString(str, len);
-    waitFor->P();
-    lock->Release();
-}
-
-//----------------------------------------------------------------------
 // SynchConsoleOutput::CallBack
-//      Interrupt handler called when it's safe to send the next
+//      Interrupt handler called when it's safe to send the next 
 //	character can be sent to the display.
 //----------------------------------------------------------------------
 
