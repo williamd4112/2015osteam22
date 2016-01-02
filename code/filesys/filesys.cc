@@ -211,6 +211,7 @@ FileSystem::Create(char *name, int initialSize)
                 success = FALSE;	// no space in directory
             else
                 {
+                    //printf("Create inode sector #%d: %s\n",sector,name);
                     hdr = new FileHeader;
                     if (!hdr->Allocate(freeMap, initialSize))
                         success = FALSE;	// no space on disk for data
@@ -353,7 +354,6 @@ void
 FileSystem::List()
 {
     Directory *directory = new Directory(NumDirEntries);
-
     directory->FetchFrom(directoryFile);
     directory->List();
     delete directory;

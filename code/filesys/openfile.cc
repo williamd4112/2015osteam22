@@ -115,7 +115,7 @@ OpenFile::Write(char *into, int numBytes)
 int
 OpenFile::ReadAt(char *into, int numBytes, int position)
 {
-    int fileLength = hdr->FileLength();
+    int fileLength = Length();
     int i, firstSector, lastSector, numSectors;
     char *buf;
 
@@ -144,7 +144,7 @@ OpenFile::ReadAt(char *into, int numBytes, int position)
 int
 OpenFile::WriteAt(char *from, int numBytes, int position)
 {
-    int fileLength = hdr->FileLength();
+    int fileLength = Length();
     int i, firstSector, lastSector, numSectors;
     bool firstAligned, lastAligned;
     char *buf;
@@ -193,7 +193,14 @@ OpenFile::WriteAt(char *from, int numBytes, int position)
 int
 OpenFile::Length()
 {
-    return hdr->FileLength();
+    int length = 0;
+    FileHeader *nextHdr = hdr;
+    while(nextHdr != NULL)
+    {
+        length += nextHdr->FileLength();
+        nextHdr = nextHdr->GetNextFileHeader();
+    }
+    return length;
 }
 
 #endif //FILESYS_STUB
