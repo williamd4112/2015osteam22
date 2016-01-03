@@ -115,6 +115,7 @@ private:
     int fileDescritporIndex;
     OpenFile *fileDescriptorTable[MAXOPENFILES];
     
+    void GetBaseName(char *dest, char *name);
     void GetFileName(char *dest, char *name);
     
 };

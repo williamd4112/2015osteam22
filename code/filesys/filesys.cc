@@ -190,10 +190,10 @@ FileSystem::~FileSystem()
 bool
 FileSystem::Create(char *name, int initialSize, bool directoryFlag)
 {
-    Directory *directory;
+    Directory *rootDirectory;
     PersistentBitmap *freeMap;
     FileHeader *hdr;
-    int sector;
+    int sector, baseSector;
     bool success;
 
     DEBUG(dbgFile, "Creating file type: " << directoryFlag << " " << name << " size " << initialSize);
@@ -202,50 +202,70 @@ FileSystem::Create(char *name, int initialSize, bool directoryFlag)
     if(directoryFlag)
         initialSize = DirectoryFileSize;
     
-    directory = new Directory(NumDirEntries);
-    directory->FetchFrom(directoryFile);
-    directory->Find_r(name, NumDirEntries, DirectorySector);
-    
-    if (directory->Find(name) != -1)
-        success = FALSE;			// file is already in directory
-    else
-        {
-            freeMap = new PersistentBitmap(freeMapFile,NumSectors);
-            sector = freeMap->FindAndSet();	// find a sector to hold the file header
-            if (sector == -1)
-                success = FALSE;		// no free block for file header
-            else if (!directory->Add(name, sector, directoryFlag))
-                success = FALSE;	// no space in directory
-            else
-                {
-                    printf("Create inode sector #%d: %s\n",sector,name);
-                    hdr = new FileHeader;
-                    if (!hdr->Allocate(freeMap, initialSize))
-                        success = FALSE;	// no space on disk for data
-                    else
-                        {
-                            success = TRUE;
-                            // everthing worked, flush all changes back to disk
-                            hdr->WriteBack(sector);
-                            directory->WriteBack(directoryFile);
-                            freeMap->WriteBack(freeMapFile);
-                        }
-                    delete hdr;
-                }
-            delete freeMap;
-        }
-    delete directory;
-    
-    if(directoryFlag)
+    rootDirectory = new Directory(NumDirEntries);
+    rootDirectory->FetchFrom(directoryFile);
+
+    char basename[256];
+    bzero(basename, sizeof(char) * 256);
+    GetBaseName(basename, name);
+    baseSector = rootDirectory->Find_r(basename, NumDirEntries, DirectorySector);
+
+    if(baseSector >= 0)
     {
-        printf("\tNew directory sector #%d: %s\n",sector,name);
-        Directory *newDirectory = new Directory(NumDirEntries);
-        OpenFile *newDirectoryFile = new OpenFile(sector);
-        newDirectory->WriteBack(newDirectoryFile);
+        OpenFile *baseDirectoryFile = new OpenFile(baseSector);
+        Directory *baseDirectory = new Directory(NumDirEntries);
+        baseDirectory->FetchFrom(baseDirectoryFile);
         
-        delete newDirectory;
-        delete newDirectoryFile;
+        char filename[256];
+        bzero(filename, sizeof(char) * 256);
+        GetFileName(filename, name);
+        
+        if (baseDirectory->Find(filename) != -1)
+            success = FALSE;			// file is already in directory
+        else
+        {
+                freeMap = new PersistentBitmap(freeMapFile,NumSectors);
+                sector = freeMap->FindAndSet();	// find a sector to hold the file header
+                
+                if (sector == -1)
+                    success = FALSE;		// no free block for file header
+                else if (!baseDirectory->Add(filename, sector, directoryFlag))
+                    success = FALSE;	// no space in directory
+                else
+                {
+                        printf("Create inode sector #%d: %s\n",sector,name);
+                        hdr = new FileHeader;
+                        if (!hdr->Allocate(freeMap, initialSize))
+                            success = FALSE;	// no space on disk for data
+                        else
+                        {
+                                success = TRUE;
+                                // everthing worked, flush all changes back to disk
+                                hdr->WriteBack(sector);
+                                baseDirectory->WriteBack(baseDirectoryFile);
+                                freeMap->WriteBack(freeMapFile);
+                        }
+                        delete hdr;
+                }
+                delete freeMap;
+        }
+        delete baseDirectoryFile;
+        delete baseDirectory;
+        
+        if(directoryFlag)
+        {
+            printf("\tNew directory sector #%d: %s\n",sector,name);
+            Directory *newDirectory = new Directory(NumDirEntries);
+            OpenFile *newDirectoryFile = new OpenFile(sector);
+            newDirectory->WriteBack(newDirectoryFile);
+            
+            delete newDirectory;
+            delete newDirectoryFile;
+        }
+
     }
+
+    delete rootDirectory;
     
     return success;
 }
@@ -263,18 +283,38 @@ FileSystem::Create(char *name, int initialSize, bool directoryFlag)
 OpenFile *
 FileSystem::Open(char *name)
 {
-    Directory *directory = new Directory(NumDirEntries);
+    Directory *rootDirectory = new Directory(NumDirEntries);
     OpenFile *openFile = NULL;
-    int sector;
+    int sector, baseSector;
 
     DEBUG(dbgFile, "Opening file" << name);
     
-    directory->FetchFrom(directoryFile);
-    sector = directory->Find(name);
-    if (sector >= 0)
-        openFile = new OpenFile(sector);	// name was found in directory
+    rootDirectory->FetchFrom(directoryFile);
 
-    delete directory;
+    char basename[256];
+    bzero(basename, sizeof(char) * 256);
+    GetBaseName(basename, name);
+    baseSector = rootDirectory->Find_r(basename, NumDirEntries, DirectorySector);
+
+    if(baseSector >= 0)
+    {
+        OpenFile *baseDirectoryFile = new OpenFile(baseSector);
+        Directory *baseDirectory = new Directory(NumDirEntries);
+        baseDirectory->FetchFrom(baseDirectoryFile);
+        
+        char filename[256];
+        bzero(filename, sizeof(char) * 256);
+        GetFileName(filename, name);
+
+        sector = baseDirectory->Find(filename);
+        if (sector >= 0)
+            openFile = new OpenFile(sector);	// name was found in directory
+
+        delete baseDirectoryFile;
+        delete baseDirectory;
+    }
+
+    delete rootDirectory;
 
     return openFile;				// return NULL if not found
 }
@@ -442,6 +482,26 @@ int
 FileSystem::GetDirectoryFileSize()
 {
     return DirectoryFileSize;
+}
+
+void 
+FileSystem::GetBaseName(char *dest, char *name)
+{
+    int len;
+    int lastSlashPos = strrchr(name, '/') - name;
+    
+    if(lastSlashPos == 0)
+    {
+        len = strlen(RootDirectoryName);
+        strncpy(dest, RootDirectoryName, len);
+        dest[len] = '\0';       
+    }
+    else
+    {
+        len = lastSlashPos;
+        strncpy(dest, name, len);
+        dest[len] = '\0';
+    }
 }
 
 void 

@@ -128,27 +128,34 @@ Directory::Find_r(char *name, int numEntries, int rootSector)
     
     if(len == 1) // passing "/", return DirectorySector
     {
+        //printf("To find root\n");
         return rootSector;
     }
     else if(len > 1)
     {
-        printf("To Find %s\n",name);
-        int nextSlashPos;
-        char nextSlashPtr = trchr(name + 1, '/') ;
+        //printf("To Find %s\n",name);
+        
+        char *nextSlashPtr = strchr(name + 1, '/') ;
+        
+        // Pattern likes /a/b/c/...
         if(nextSlashPtr != NULL)
         {
-            printf("\t Next slash pos %d\n",nextSlashPos);
-            nextSlashPos = nextSlashPtr - name;
+            int nextSlashPos = nextSlashPtr - name;
+            //printf("\t Next slash pos %d\n",nextSlashPos);
+
             strncpy(buff, name, nextSlashPos); // /t1/t2, we cut /t1
             buff[nextSlashPos] = '\0';
+            
             name += nextSlashPos;
-            printf("Find(%s) and remain %s\n",buff,name);
+            //printf("Find(%s) and remain %s\n",buff,name);
         }
+        // Pattern likes /a
         else
         {
             strncpy(buff, name, len);
-            name += nextSlashPos;
-            printf("Find(%s) and remain %s\n",buff,name);
+            buff[len] = '\0';
+            name += len;
+            //printf("Find(%s) and remain %s\n",buff,name);
         }
     }
     
@@ -159,7 +166,10 @@ Directory::Find_r(char *name, int numEntries, int rootSector)
             if(!strncmp(table[i].name, buff, FileNameMaxLen))
             {
                 if(*name == '\0') // Reach end
+                {
+                    //printf("Find sector = %d\n",table[i].sector);
                     return table[i].sector;
+                }
                 else
                 {
                     OpenFile *dirFile = new OpenFile(table[i].sector);
