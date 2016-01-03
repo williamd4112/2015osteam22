@@ -377,33 +377,70 @@ FileSystem::PutFileDescriptor(OpenFile *fileDesc)
 bool
 FileSystem::Remove(char *name)
 {
-    Directory *directory;
+    printf("Remove(%s):\n",name);
+    Directory *rootDirectory;
     PersistentBitmap *freeMap;
     FileHeader *fileHdr;
-    int sector;
+    int sector, baseSector;
 
-    directory = new Directory(NumDirEntries);
-    directory->FetchFrom(directoryFile);
-    sector = directory->Find(name);
+    rootDirectory = new Directory(NumDirEntries);
+    rootDirectory->FetchFrom(directoryFile);
+
+    char basename[256];
+    bzero(basename, sizeof(char) * 256);
+    GetBaseName(basename, name);
+    
+    baseSector = rootDirectory->Find_r(basename, NumDirEntries, DirectorySector);
+    if(baseSector == -1)
+    {
+        delete rootDirectory;
+        return FALSE;
+    } 
+
+    OpenFile *baseDirectoryFile = new OpenFile(baseSector);
+    Directory *baseDirectory = new Directory(NumDirEntries);
+    baseDirectory->FetchFrom(baseDirectoryFile);
+
+    char filename[256];
+    bzero(filename, sizeof(char) * 256);
+    GetFileName(filename, name);
+
+    sector = baseDirectory->Find(filename);
     if (sector == -1)
-        {
-            delete directory;
-            return FALSE;			 // file not found
-        }
+    {
+        delete rootDirectory;
+        delete baseDirectoryFile;
+        delete baseDirectory;
+        return FALSE;			 // file not found
+    }
+    
     fileHdr = new FileHeader;
     fileHdr->FetchFrom(sector);
 
     freeMap = new PersistentBitmap(freeMapFile,NumSectors);
 
     fileHdr->Deallocate(freeMap);  		// remove data blocks
-    freeMap->Clear(sector);			// remove header block
-    directory->Remove(name);
+    
+    // Iterately clear fileheader sector
+    FileHeader *hdr = fileHdr;
+    int hdrSector = sector;
+    while(hdr != NULL)
+    {
+        freeMap->Clear(hdrSector);
+        hdrSector = hdr->GetNextFileHeaderSector();
+        hdr = hdr->GetNextFileHeader();
+    }
+
+    baseDirectory->Remove(name);                    // remove directory entry
 
     freeMap->WriteBack(freeMapFile);		// flush to disk
-    directory->WriteBack(directoryFile);        // flush to disk
+    baseDirectory->WriteBack(baseDirectoryFile);        // flush to disk
+
     delete fileHdr;
-    delete directory;
+    delete baseDirectory;
     delete freeMap;
+    delete rootDirectory;
+    
     return TRUE;
 }
 

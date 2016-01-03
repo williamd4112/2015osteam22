@@ -49,7 +49,7 @@ public:
     //  including allocating space
     //  on disk for the file data
     void Deallocate(PersistentBitmap *bitMap);  // De-allocate this file's
-    //  data blocks
+                                                //  data blocks
 
     void FetchFrom(int sectorNumber); 	// Initialize file header from disk
     void WriteBack(int sectorNumber); 	// Write modifications to file header

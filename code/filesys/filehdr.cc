@@ -118,10 +118,16 @@ void
 FileHeader::Deallocate(PersistentBitmap *freeMap)
 {
     for (int i = 0; i < numSectors; i++)
-        {
-            ASSERT(freeMap->Test((int) dataSectors[i]));  // ought to be marked!
-            freeMap->Clear((int) dataSectors[i]);
-        }
+    {
+        ASSERT(freeMap->Test((int) dataSectors[i]));  // ought to be marked!
+        freeMap->Clear((int) dataSectors[i]);
+    }
+
+    if(nextFileHeaderSector != -1)
+    {
+        ASSERT(nextFileHeader != NULL);
+        nextFileHeader->Deallocate(freeMap);
+    }
 }
 
 //----------------------------------------------------------------------
