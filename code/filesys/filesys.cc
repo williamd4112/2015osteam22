@@ -233,7 +233,7 @@ FileSystem::Create(char *name, int initialSize, bool directoryFlag)
                     success = FALSE;	// no space in directory
                 else
                 {
-                        printf("Create inode sector #%d: %s\n",sector,name);
+                        //printf("Create inode sector #%d: %s\n",sector,name);
                         hdr = new FileHeader;
                         if (!hdr->Allocate(freeMap, initialSize))
                             success = FALSE;	// no space on disk for data
@@ -254,7 +254,7 @@ FileSystem::Create(char *name, int initialSize, bool directoryFlag)
         
         if(directoryFlag)
         {
-            printf("\tNew directory sector #%d: %s\n",sector,name);
+            //printf("\tNew directory sector #%d: %s\n",sector,name);
             Directory *newDirectory = new Directory(NumDirEntries);
             OpenFile *newDirectoryFile = new OpenFile(sector);
             newDirectory->WriteBack(newDirectoryFile);
@@ -373,11 +373,9 @@ FileSystem::PutFileDescriptor(OpenFile *fileDesc)
 //
 //	"name" -- the text name of the file to be removed
 //----------------------------------------------------------------------
-
 bool
-FileSystem::Remove(char *name)
+FileSystem::Remove(char *name, bool recursiveFlag)
 {
-    printf("Remove(%s):\n",name);
     Directory *rootDirectory;
     PersistentBitmap *freeMap;
     FileHeader *fileHdr;
@@ -405,8 +403,9 @@ FileSystem::Remove(char *name)
     bzero(filename, sizeof(char) * 256);
     GetFileName(filename, name);
 
-    sector = baseDirectory->Find(filename);
-    if (sector == -1)
+    bool dirFlag;
+    sector = baseDirectory->Find(filename, &dirFlag);
+    if (sector == -1 || (!recursiveFlag && dirFlag))
     {
         delete rootDirectory;
         delete baseDirectoryFile;
@@ -414,6 +413,30 @@ FileSystem::Remove(char *name)
         return FALSE;			 // file not found
     }
     
+    // Recursive remove directory
+    if(recursiveFlag && dirFlag)
+    {
+        OpenFile *dirFile = new OpenFile(sector);
+        Directory *dir = new Directory(NumDirEntries);
+        dir->FetchFrom(dirFile);
+        
+        for(int i = 0; i < dir->GetSize(); i++)
+        {
+            DirectoryEntry ent = dir->GetEntry(i);
+            if(ent.inUse)
+            {
+                char buff[256];
+                sprintf(buff, "%s%s",name,ent.name);
+                Remove(buff, recursiveFlag);
+            }
+        }
+
+        dir->WriteBack(dirFile);
+
+        delete dirFile;
+        delete dir;
+    }
+
     fileHdr = new FileHeader;
     fileHdr->FetchFrom(sector);
 
@@ -430,8 +453,8 @@ FileSystem::Remove(char *name)
         hdrSector = hdr->GetNextFileHeaderSector();
         hdr = hdr->GetNextFileHeader();
     }
-
-    baseDirectory->Remove(name);                    // remove directory entry
+    
+    ASSERT(baseDirectory->Remove(filename) == TRUE);                    // remove directory entry
 
     freeMap->WriteBack(freeMapFile);		// flush to disk
     baseDirectory->WriteBack(baseDirectoryFile);        // flush to disk
@@ -450,14 +473,14 @@ FileSystem::Remove(char *name)
 //----------------------------------------------------------------------
 
 void
-FileSystem::List(char *dirName)
+FileSystem::List(char *dirName, bool recurrsiveFlag)
 {
     Directory *rootDirectory = new Directory(NumDirEntries);
     rootDirectory->FetchFrom(directoryFile);
     
     if(strncmp(dirName, RootDirectoryName, strlen(dirName)) == 0)
     {
-        rootDirectory->List();
+        (recurrsiveFlag) ? rootDirectory->List_r(0, NumDirEntries) : rootDirectory->List();
     }
     else
     {
@@ -468,7 +491,7 @@ FileSystem::List(char *dirName)
             Directory *directory = new Directory(NumDirEntries);
             
             directory->FetchFrom(toListDirectoryFile);
-            directory->List();
+            (recurrsiveFlag) ? directory->List_r(0, NumDirEntries) : directory->List();
             
             delete directory;
             delete toListDirectoryFile;

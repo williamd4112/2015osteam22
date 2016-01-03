@@ -94,7 +94,7 @@ FileHeader::Allocate(PersistentBitmap *freeMap, int fileSize)
         //printf("Extend inode: sector #%d (Remain size: %d)\n",nextFileHeaderSector, fileSize);
         if (nextFileHeaderSector == -1)
         {
-            printf("===No enough space for next file header\n");
+            //printf("===No enough space for next file header\n");
             return FALSE;		// no free block for file header   
         }
         else

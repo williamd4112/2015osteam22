@@ -106,7 +106,7 @@ Copy(char *from, char *to)
             return;
         }
 
-    printf("Copy: open %s\n",to);
+    //printf("Copy: open %s\n",to);
     openFile = kernel->fileSystem->Open(to);
     ASSERT(openFile != NULL);
 
@@ -337,7 +337,7 @@ main(int argc, char **argv)
 #ifndef FILESYS_STUB
     if (removeFileName != NULL)
         {
-            kernel->fileSystem->Remove(removeFileName);
+            kernel->fileSystem->Remove(removeFileName, recursiveRemoveFlag);
         }
     if (copyUnixFileName != NULL && copyNachosFileName != NULL)
         {
@@ -349,7 +349,7 @@ main(int argc, char **argv)
         }
     if (dirListFlag)
         {
-            kernel->fileSystem->List(listDirectoryName);
+            kernel->fileSystem->List(listDirectoryName, recursiveListFlag );
         }
     if (mkdirFlag)
         {

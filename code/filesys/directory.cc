@@ -109,13 +109,23 @@ Directory::FindIndex(char *name)
 //----------------------------------------------------------------------
 
 int
-Directory::Find(char *name)
+Directory::Find(char *name, bool *directoryFlagAddr)
 {
     int i = FindIndex(name);
 
     if (i != -1)
+    {
+        if(directoryFlagAddr != NULL)
+            *directoryFlagAddr = table[i].directoryFlag;
         return table[i].sector;
+    }
     return -1;
+}
+
+int
+Directory::Find(char *name)
+{
+    return Find(name, NULL);
 }
 
 int
@@ -214,7 +224,7 @@ Directory::Add(char *name, int newSector, bool directoryFlag)
                 table[i].inUse = TRUE;
                 strncpy(table[i].name, name, FileNameMaxLen);
                 table[i].sector = newSector;
-                printf("Directory::Add(%s)\n",name);
+                //printf("Directory::Add(%s)\n",name);
                 return TRUE;
             }
     return FALSE;	// no space.  Fix when we have extensible files.
@@ -250,6 +260,30 @@ Directory::List()
     for (int i = 0; i < tableSize; i++)
         if (table[i].inUse)
             printf("%s\n", table[i].name);
+}
+
+void
+Directory::List_r(int level, int numEntries)
+{
+    for(int i = 0; i < tableSize; i++)
+    {
+        if(table[i].inUse)
+        {
+            for(int j = 0; j < level; j++)
+                printf(" ");
+            printf("%s\n",table[i].name);
+            if(table[i].directoryFlag)
+            {
+                OpenFile *dirFile = new OpenFile(table[i].sector);
+                Directory *dir = new Directory(numEntries);
+                dir->FetchFrom(dirFile);
+                dir->List_r(level + 1, numEntries);
+
+                delete dirFile;
+                delete dir;
+            }
+        }
+    }
 }
 
 //----------------------------------------------------------------------

@@ -63,6 +63,7 @@ public:
     // directory contents back to disk
 
     int Find(char *name);		// Find the sector number of the
+    int Find(char *name, bool *directoryFlagAddr);
     // FileHeader for file: "name"
     int Find_r(char *name, int numEntries, int rootSector);
 
@@ -71,10 +72,13 @@ public:
     bool Remove(char *name);		// Remove a file from the directory
 
     void List();			// Print the names of all the files
-    //  in the directory
+                                        //  in the directory
+    void List_r(int level, int numEntries);
     void Print();			// Verbose print of the contents
     //  of the directory -- all the file
     //  names and their contents.
+    int GetSize(){ return tableSize; }
+    DirectoryEntry GetEntry(int i) { return table[i]; }   
 
 private:
 

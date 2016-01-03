@@ -78,6 +78,7 @@ public:
 };
 
 #else // FILESYS
+class Directory;
 class FileSystem
 {
 public:
@@ -101,9 +102,9 @@ public:
     
     OpenFileId PutFileDescriptor(OpenFile *fileDesc);
     
-    bool Remove(char *name);  		// Delete a file (UNIX unlink)
-
-    void List(char *dirName);			// List all the files in the file system
+    bool Remove(char *name, bool recursiveFlag);  		// Delete a file (UNIX unlink)
+    
+    void List(char *dirName, bool recurrsiveFlag);			// List all the files in the file system
 
     void Print();			// List all the files and their contents
     int GetDirectoryFileSize();
