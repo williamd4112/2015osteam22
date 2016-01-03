@@ -1,321 +1,195 @@
-Tick 10: Thread 1 is inserted into queue L3 (EST: 0.000000, PRI: 0)
-Tick 20: Thread 0 Sleep
-Tick 20: Thread 1 is removed from queue L3 (EST: 0.000000, PRI: 0)
-Tick 20: Thread 0 is replaced, and it has executed 20 ticks
-Tick 20: Thread 1 is now selcted for execution
-Tick 60: Thread 1: 50
-
-Tick 60: Thread 1 Sleep
-Tick 160: Thread 1 is inserted into queue L3 (EST: 20.000000, PRI: 0)
-Tick 160: Thread 1 is removed from queue L3 (EST: 20.000000, PRI: 0)
-Tick 160: Thread 1 is replaced, and it has executed 40 ticks
-Tick 160: Thread 1 is now selcted for execution
-Tick 217: Thread 1: 49
-
-Tick 217: Thread 1 Sleep
-Tick 317: Thread 1 is inserted into queue L3 (EST: 38.500000, PRI: 0)
-Tick 317: Thread 1 is removed from queue L3 (EST: 38.500000, PRI: 0)
-Tick 317: Thread 1 is replaced, and it has executed 57 ticks
-Tick 317: Thread 1 is now selcted for execution
-Tick 364: Thread 1: 48
-
-Tick 364: Thread 1 Sleep
-Tick 464: Thread 1 is inserted into queue L3 (EST: 42.750000, PRI: 0)
-Tick 464: Thread 1 is removed from queue L3 (EST: 42.750000, PRI: 0)
-Tick 464: Thread 1 is replaced, and it has executed 47 ticks
-Tick 464: Thread 1 is now selcted for execution
-Tick 521: Thread 1: 47
-
-Tick 521: Thread 1 Sleep
-Tick 621: Thread 1 is inserted into queue L3 (EST: 49.875000, PRI: 0)
-Tick 621: Thread 1 is removed from queue L3 (EST: 49.875000, PRI: 0)
-Tick 621: Thread 1 is replaced, and it has executed 57 ticks
-Tick 621: Thread 1 is now selcted for execution
-Tick 668: Thread 1: 46
-
-Tick 668: Thread 1 Sleep
-Tick 768: Thread 1 is inserted into queue L3 (EST: 48.437500, PRI: 0)
-Tick 768: Thread 1 is removed from queue L3 (EST: 48.437500, PRI: 0)
-Tick 768: Thread 1 is replaced, and it has executed 47 ticks
-Tick 768: Thread 1 is now selcted for execution
-Tick 825: Thread 1: 45
-
-Tick 825: Thread 1 Sleep
-Tick 925: Thread 1 is inserted into queue L3 (EST: 52.718750, PRI: 0)
-Tick 925: Thread 1 is removed from queue L3 (EST: 52.718750, PRI: 0)
-Tick 925: Thread 1 is replaced, and it has executed 57 ticks
-Tick 925: Thread 1 is now selcted for execution
-Tick 972: Thread 1: 44
-
-Tick 972: Thread 1 Sleep
-Tick 1072: Thread 1 is inserted into queue L3 (EST: 49.859375, PRI: 0)
-Tick 1072: Thread 1 is removed from queue L3 (EST: 49.859375, PRI: 0)
-Tick 1072: Thread 1 is replaced, and it has executed 47 ticks
-Tick 1072: Thread 1 is now selcted for execution
-Tick 1129: Thread 1: 43
-
-Tick 1129: Thread 1 Sleep
-Tick 1229: Thread 1 is inserted into queue L3 (EST: 53.429688, PRI: 0)
-Tick 1229: Thread 1 is removed from queue L3 (EST: 53.429688, PRI: 0)
-Tick 1229: Thread 1 is replaced, and it has executed 57 ticks
-Tick 1229: Thread 1 is now selcted for execution
-Tick 1276: Thread 1: 42
-
-Tick 1276: Thread 1 Sleep
-Tick 1376: Thread 1 is inserted into queue L3 (EST: 50.214844, PRI: 0)
-Tick 1376: Thread 1 is removed from queue L3 (EST: 50.214844, PRI: 0)
-Tick 1376: Thread 1 is replaced, and it has executed 47 ticks
-Tick 1376: Thread 1 is now selcted for execution
-Tick 1433: Thread 1: 41
-
-Tick 1433: Thread 1 Sleep
-Tick 1533: Thread 1 is inserted into queue L3 (EST: 53.607422, PRI: 0)
-Tick 1533: Thread 1 is removed from queue L3 (EST: 53.607422, PRI: 0)
-Tick 1533: Thread 1 is replaced, and it has executed 57 ticks
-Tick 1533: Thread 1 is now selcted for execution
-Tick 1580: Thread 1: 40
-
-Tick 1580: Thread 1 Sleep
-Tick 1680: Thread 1 is inserted into queue L3 (EST: 50.303711, PRI: 0)
-Tick 1680: Thread 1 is removed from queue L3 (EST: 50.303711, PRI: 0)
-Tick 1680: Thread 1 is replaced, and it has executed 47 ticks
-Tick 1680: Thread 1 is now selcted for execution
-Tick 1737: Thread 1: 39
-
-Tick 1737: Thread 1 Sleep
-Tick 1837: Thread 1 is inserted into queue L3 (EST: 53.651855, PRI: 0)
-Tick 1837: Thread 1 is removed from queue L3 (EST: 53.651855, PRI: 0)
-Tick 1837: Thread 1 is replaced, and it has executed 57 ticks
-Tick 1837: Thread 1 is now selcted for execution
-Tick 1884: Thread 1: 38
-
-Tick 1884: Thread 1 Sleep
-Tick 1984: Thread 1 is inserted into queue L3 (EST: 50.325928, PRI: 0)
-Tick 1984: Thread 1 is removed from queue L3 (EST: 50.325928, PRI: 0)
-Tick 1984: Thread 1 is replaced, and it has executed 47 ticks
-Tick 1984: Thread 1 is now selcted for execution
-Tick 2041: Thread 1: 37
-
-Tick 2041: Thread 1 Sleep
-Tick 2141: Thread 1 is inserted into queue L3 (EST: 53.662964, PRI: 0)
-Tick 2141: Thread 1 is removed from queue L3 (EST: 53.662964, PRI: 0)
-Tick 2141: Thread 1 is replaced, and it has executed 57 ticks
-Tick 2141: Thread 1 is now selcted for execution
-Tick 2188: Thread 1: 36
-
-Tick 2188: Thread 1 Sleep
-Tick 2288: Thread 1 is inserted into queue L3 (EST: 50.331482, PRI: 0)
-Tick 2288: Thread 1 is removed from queue L3 (EST: 50.331482, PRI: 0)
-Tick 2288: Thread 1 is replaced, and it has executed 47 ticks
-Tick 2288: Thread 1 is now selcted for execution
-Tick 2345: Thread 1: 35
-
-Tick 2345: Thread 1 Sleep
-Tick 2445: Thread 1 is inserted into queue L3 (EST: 53.665741, PRI: 0)
-Tick 2445: Thread 1 is removed from queue L3 (EST: 53.665741, PRI: 0)
-Tick 2445: Thread 1 is replaced, and it has executed 57 ticks
-Tick 2445: Thread 1 is now selcted for execution
-Tick 2492: Thread 1: 34
-
-Tick 2492: Thread 1 Sleep
-Tick 2592: Thread 1 is inserted into queue L3 (EST: 50.332870, PRI: 0)
-Tick 2592: Thread 1 is removed from queue L3 (EST: 50.332870, PRI: 0)
-Tick 2592: Thread 1 is replaced, and it has executed 47 ticks
-Tick 2592: Thread 1 is now selcted for execution
-Tick 2649: Thread 1: 33
-
-Tick 2649: Thread 1 Sleep
-Tick 2749: Thread 1 is inserted into queue L3 (EST: 53.666435, PRI: 0)
-Tick 2749: Thread 1 is removed from queue L3 (EST: 53.666435, PRI: 0)
-Tick 2749: Thread 1 is replaced, and it has executed 57 ticks
-Tick 2749: Thread 1 is now selcted for execution
-Tick 2796: Thread 1: 32
-
-Tick 2796: Thread 1 Sleep
-Tick 2896: Thread 1 is inserted into queue L3 (EST: 50.333218, PRI: 0)
-Tick 2896: Thread 1 is removed from queue L3 (EST: 50.333218, PRI: 0)
-Tick 2896: Thread 1 is replaced, and it has executed 47 ticks
-Tick 2896: Thread 1 is now selcted for execution
-Tick 2953: Thread 1: 31
-
-Tick 2953: Thread 1 Sleep
-Tick 3053: Thread 1 is inserted into queue L3 (EST: 53.666609, PRI: 0)
-Tick 3053: Thread 1 is removed from queue L3 (EST: 53.666609, PRI: 0)
-Tick 3053: Thread 1 is replaced, and it has executed 57 ticks
-Tick 3053: Thread 1 is now selcted for execution
-Tick 3100: Thread 1: 30
-
-Tick 3100: Thread 1 Sleep
-Tick 3200: Thread 1 is inserted into queue L3 (EST: 50.333304, PRI: 0)
-Tick 3200: Thread 1 is removed from queue L3 (EST: 50.333304, PRI: 0)
-Tick 3200: Thread 1 is replaced, and it has executed 47 ticks
-Tick 3200: Thread 1 is now selcted for execution
-Tick 3257: Thread 1: 29
-
-Tick 3257: Thread 1 Sleep
-Tick 3357: Thread 1 is inserted into queue L3 (EST: 53.666652, PRI: 0)
-Tick 3357: Thread 1 is removed from queue L3 (EST: 53.666652, PRI: 0)
-Tick 3357: Thread 1 is replaced, and it has executed 57 ticks
-Tick 3357: Thread 1 is now selcted for execution
-Tick 3404: Thread 1: 28
-
-Tick 3404: Thread 1 Sleep
-Tick 3504: Thread 1 is inserted into queue L3 (EST: 50.333326, PRI: 0)
-Tick 3504: Thread 1 is removed from queue L3 (EST: 50.333326, PRI: 0)
-Tick 3504: Thread 1 is replaced, and it has executed 47 ticks
-Tick 3504: Thread 1 is now selcted for execution
-Tick 3561: Thread 1: 27
-
-Tick 3561: Thread 1 Sleep
-Tick 3661: Thread 1 is inserted into queue L3 (EST: 53.666663, PRI: 0)
-Tick 3661: Thread 1 is removed from queue L3 (EST: 53.666663, PRI: 0)
-Tick 3661: Thread 1 is replaced, and it has executed 57 ticks
-Tick 3661: Thread 1 is now selcted for execution
-Tick 3708: Thread 1: 26
-
-Tick 3708: Thread 1 Sleep
-Tick 3808: Thread 1 is inserted into queue L3 (EST: 50.333332, PRI: 0)
-Tick 3808: Thread 1 is removed from queue L3 (EST: 50.333332, PRI: 0)
-Tick 3808: Thread 1 is replaced, and it has executed 47 ticks
-Tick 3808: Thread 1 is now selcted for execution
-Tick 3865: Thread 1: 25
-
-Tick 3865: Thread 1 Sleep
-Tick 3965: Thread 1 is inserted into queue L3 (EST: 53.666666, PRI: 0)
-Tick 3965: Thread 1 is removed from queue L3 (EST: 53.666666, PRI: 0)
-Tick 3965: Thread 1 is replaced, and it has executed 57 ticks
-Tick 3965: Thread 1 is now selcted for execution
-Tick 4012: Thread 1: 24
-
-Tick 4012: Thread 1 Sleep
-Tick 4112: Thread 1 is inserted into queue L3 (EST: 50.333333, PRI: 0)
-Tick 4112: Thread 1 is removed from queue L3 (EST: 50.333333, PRI: 0)
-Tick 4112: Thread 1 is replaced, and it has executed 47 ticks
-Tick 4112: Thread 1 is now selcted for execution
-Tick 4169: Thread 1: 23
-
-Tick 4169: Thread 1 Sleep
-Tick 4269: Thread 1 is inserted into queue L3 (EST: 53.666666, PRI: 0)
-Tick 4269: Thread 1 is removed from queue L3 (EST: 53.666666, PRI: 0)
-Tick 4269: Thread 1 is replaced, and it has executed 57 ticks
-Tick 4269: Thread 1 is now selcted for execution
-Tick 4316: Thread 1: 22
-
-Tick 4316: Thread 1 Sleep
-Tick 4416: Thread 1 is inserted into queue L3 (EST: 50.333333, PRI: 0)
-Tick 4416: Thread 1 is removed from queue L3 (EST: 50.333333, PRI: 0)
-Tick 4416: Thread 1 is replaced, and it has executed 47 ticks
-Tick 4416: Thread 1 is now selcted for execution
-Tick 4473: Thread 1: 21
-
-Tick 4473: Thread 1 Sleep
-Tick 4573: Thread 1 is inserted into queue L3 (EST: 53.666667, PRI: 0)
-Tick 4573: Thread 1 is removed from queue L3 (EST: 53.666667, PRI: 0)
-Tick 4573: Thread 1 is replaced, and it has executed 57 ticks
-Tick 4573: Thread 1 is now selcted for execution
-Tick 4620: Thread 1: 20
-
-Tick 4620: Thread 1 Sleep
-Tick 4720: Thread 1 is inserted into queue L3 (EST: 50.333333, PRI: 0)
-Tick 4720: Thread 1 is removed from queue L3 (EST: 50.333333, PRI: 0)
-Tick 4720: Thread 1 is replaced, and it has executed 47 ticks
-Tick 4720: Thread 1 is now selcted for execution
-Tick 4777: Thread 1: 19
-
-Tick 4777: Thread 1 Sleep
-Tick 4877: Thread 1 is inserted into queue L3 (EST: 53.666667, PRI: 0)
-Tick 4877: Thread 1 is removed from queue L3 (EST: 53.666667, PRI: 0)
-Tick 4877: Thread 1 is replaced, and it has executed 57 ticks
-Tick 4877: Thread 1 is now selcted for execution
-Tick 4924: Thread 1: 18
-
-Tick 4924: Thread 1 Sleep
-Tick 5024: Thread 1 is inserted into queue L3 (EST: 50.333333, PRI: 0)
-Tick 5024: Thread 1 is removed from queue L3 (EST: 50.333333, PRI: 0)
-Tick 5024: Thread 1 is replaced, and it has executed 47 ticks
-Tick 5024: Thread 1 is now selcted for execution
-Tick 5081: Thread 1: 17
-
-Tick 5081: Thread 1 Sleep
-Tick 5181: Thread 1 is inserted into queue L3 (EST: 53.666667, PRI: 0)
-Tick 5181: Thread 1 is removed from queue L3 (EST: 53.666667, PRI: 0)
-Tick 5181: Thread 1 is replaced, and it has executed 57 ticks
-Tick 5181: Thread 1 is now selcted for execution
-Tick 5228: Thread 1: 16
-
-Tick 5228: Thread 1 Sleep
-Tick 5328: Thread 1 is inserted into queue L3 (EST: 50.333333, PRI: 0)
-Tick 5328: Thread 1 is removed from queue L3 (EST: 50.333333, PRI: 0)
-Tick 5328: Thread 1 is replaced, and it has executed 47 ticks
-Tick 5328: Thread 1 is now selcted for execution
-Tick 5385: Thread 1: 15
-
-Tick 5385: Thread 1 Sleep
-Tick 5485: Thread 1 is inserted into queue L3 (EST: 53.666667, PRI: 0)
-Tick 5485: Thread 1 is removed from queue L3 (EST: 53.666667, PRI: 0)
-Tick 5485: Thread 1 is replaced, and it has executed 57 ticks
-Tick 5485: Thread 1 is now selcted for execution
-Tick 5532: Thread 1: 14
-
-Tick 5532: Thread 1 Sleep
-Tick 5632: Thread 1 is inserted into queue L3 (EST: 50.333333, PRI: 0)
-Tick 5632: Thread 1 is removed from queue L3 (EST: 50.333333, PRI: 0)
-Tick 5632: Thread 1 is replaced, and it has executed 47 ticks
-Tick 5632: Thread 1 is now selcted for execution
-Tick 5689: Thread 1: 13
-
-Tick 5689: Thread 1 Sleep
-Tick 5789: Thread 1 is inserted into queue L3 (EST: 53.666667, PRI: 0)
-Tick 5789: Thread 1 is removed from queue L3 (EST: 53.666667, PRI: 0)
-Tick 5789: Thread 1 is replaced, and it has executed 57 ticks
-Tick 5789: Thread 1 is now selcted for execution
-Tick 5836: Thread 1: 12
-
-Tick 5836: Thread 1 Sleep
-Tick 5936: Thread 1 is inserted into queue L3 (EST: 50.333333, PRI: 0)
-Tick 5936: Thread 1 is removed from queue L3 (EST: 50.333333, PRI: 0)
-Tick 5936: Thread 1 is replaced, and it has executed 47 ticks
-Tick 5936: Thread 1 is now selcted for execution
-Tick 5993: Thread 1: 11
-
-Tick 5993: Thread 1 Sleep
-Tick 6093: Thread 1 is inserted into queue L3 (EST: 53.666667, PRI: 0)
-Tick 6093: Thread 1 is removed from queue L3 (EST: 53.666667, PRI: 0)
-Tick 6093: Thread 1 is replaced, and it has executed 57 ticks
-Tick 6093: Thread 1 is now selcted for execution
-Tick 6140: Thread 1: 10
-
-Tick 6140: Thread 1 Sleep
-Tick 6240: Thread 1 is inserted into queue L3 (EST: 50.333333, PRI: 0)
-Tick 6240: Thread 1 is removed from queue L3 (EST: 50.333333, PRI: 0)
-Tick 6240: Thread 1 is replaced, and it has executed 47 ticks
-Tick 6240: Thread 1 is now selcted for execution
-Tick 6297: Thread 1: 9
-
-Tick 6297: Thread 1 Sleep
-Tick 6397: Thread 1 is inserted into queue L3 (EST: 53.666667, PRI: 0)
-Tick 6397: Thread 1 is removed from queue L3 (EST: 53.666667, PRI: 0)
-Tick 6397: Thread 1 is replaced, and it has executed 57 ticks
-Tick 6397: Thread 1 is now selcted for execution
-Tick 6444: Thread 1: 8
-
-Tick 6444: Thread 1 Sleep
-Tick 6544: Thread 1 is inserted into queue L3 (EST: 50.333333, PRI: 0)
-Tick 6544: Thread 1 is removed from queue L3 (EST: 50.333333, PRI: 0)
-Tick 6544: Thread 1 is replaced, and it has executed 47 ticks
-Tick 6544: Thread 1 is now selcted for execution
-Tick 6601: Thread 1: 7
-
-Tick 6601: Thread 1 Sleep
-Tick 6701: Thread 1 is inserted into queue L3 (EST: 53.666667, PRI: 0)
-Tick 6701: Thread 1 is removed from queue L3 (EST: 53.666667, PRI: 0)
-Tick 6701: Thread 1 is replaced, and it has executed 57 ticks
-Tick 6701: Thread 1 is now selcted for execution
-Tick 6748: Thread 1: 6
-
-Tick 6748: Thread 1 Sleep
-Tick 6848: Thread 1 is inserted into queue L3 (EST: 50.333333, PRI: 0)
-Tick 6848: Thread 1 is removed from queue L3 (EST: 50.333333, PRI: 0)
-Tick 6848: Thread 1 is replaced, and it has executed 47 ticks
-Tick 6848: Thread 1 is now selcted for execution
-Tick 6901: Thread 1 Sleep
+==26374== Memcheck, a memory error detector
+==26374== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==26374== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==26374== Command: ./nachos -f
+==26374== 
+==26374== 
+==26374== HEAP SUMMARY:
+==26374==     in use at exit: 648 bytes in 2 blocks
+==26374==   total heap usage: 2,324 allocs, 2,322 frees, 176,664 bytes allocated
+==26374== 
+==26374== LEAK SUMMARY:
+==26374==    definitely lost: 0 bytes in 0 blocks
+==26374==    indirectly lost: 0 bytes in 0 blocks
+==26374==      possibly lost: 0 bytes in 0 blocks
+==26374==    still reachable: 648 bytes in 2 blocks
+==26374==         suppressed: 0 bytes in 0 blocks
+==26374== Reachable blocks (those to which a pointer was found) are not shown.
+==26374== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==26374== 
+==26374== For counts of detected and suppressed errors, rerun with: -v
+==26374== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 18 from 8)
+==26375== Memcheck, a memory error detector
+==26375== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==26375== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==26375== Command: ./nachos -mkdir /a
+==26375== 
+==26375== 
+==26375== HEAP SUMMARY:
+==26375==     in use at exit: 648 bytes in 2 blocks
+==26375==   total heap usage: 4,422 allocs, 4,420 frees, 265,456 bytes allocated
+==26375== 
+==26375== LEAK SUMMARY:
+==26375==    definitely lost: 0 bytes in 0 blocks
+==26375==    indirectly lost: 0 bytes in 0 blocks
+==26375==      possibly lost: 0 bytes in 0 blocks
+==26375==    still reachable: 648 bytes in 2 blocks
+==26375==         suppressed: 0 bytes in 0 blocks
+==26375== Reachable blocks (those to which a pointer was found) are not shown.
+==26375== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==26375== 
+==26375== For counts of detected and suppressed errors, rerun with: -v
+==26375== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 18 from 8)
+==26376== Memcheck, a memory error detector
+==26376== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==26376== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==26376== Command: ./nachos -mkdir /a/b
+==26376== 
+==26376== 
+==26376== HEAP SUMMARY:
+==26376==     in use at exit: 648 bytes in 2 blocks
+==26376==   total heap usage: 4,422 allocs, 4,420 frees, 265,456 bytes allocated
+==26376== 
+==26376== LEAK SUMMARY:
+==26376==    definitely lost: 0 bytes in 0 blocks
+==26376==    indirectly lost: 0 bytes in 0 blocks
+==26376==      possibly lost: 0 bytes in 0 blocks
+==26376==    still reachable: 648 bytes in 2 blocks
+==26376==         suppressed: 0 bytes in 0 blocks
+==26376== Reachable blocks (those to which a pointer was found) are not shown.
+==26376== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==26376== 
+==26376== For counts of detected and suppressed errors, rerun with: -v
+==26376== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 18 from 8)
+==26377== Memcheck, a memory error detector
+==26377== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==26377== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==26377== Command: ./nachos -cp ../test/num_100.txt /a/b/bf1
+==26377== 
+==26377== 
+==26377== HEAP SUMMARY:
+==26377==     in use at exit: 648 bytes in 2 blocks
+==26377==   total heap usage: 4,615 allocs, 4,613 frees, 276,372 bytes allocated
+==26377== 
+==26377== LEAK SUMMARY:
+==26377==    definitely lost: 0 bytes in 0 blocks
+==26377==    indirectly lost: 0 bytes in 0 blocks
+==26377==      possibly lost: 0 bytes in 0 blocks
+==26377==    still reachable: 648 bytes in 2 blocks
+==26377==         suppressed: 0 bytes in 0 blocks
+==26377== Reachable blocks (those to which a pointer was found) are not shown.
+==26377== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==26377== 
+==26377== For counts of detected and suppressed errors, rerun with: -v
+==26377== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 18 from 8)
+==26378== Memcheck, a memory error detector
+==26378== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==26378== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==26378== Command: ./nachos -cp ../test/num_100.txt /a/b/bf2
+==26378== 
+==26378== 
+==26378== HEAP SUMMARY:
+==26378==     in use at exit: 648 bytes in 2 blocks
+==26378==   total heap usage: 4,615 allocs, 4,613 frees, 276,372 bytes allocated
+==26378== 
+==26378== LEAK SUMMARY:
+==26378==    definitely lost: 0 bytes in 0 blocks
+==26378==    indirectly lost: 0 bytes in 0 blocks
+==26378==      possibly lost: 0 bytes in 0 blocks
+==26378==    still reachable: 648 bytes in 2 blocks
+==26378==         suppressed: 0 bytes in 0 blocks
+==26378== Reachable blocks (those to which a pointer was found) are not shown.
+==26378== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==26378== 
+==26378== For counts of detected and suppressed errors, rerun with: -v
+==26378== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 18 from 8)
+==26379== Memcheck, a memory error detector
+==26379== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==26379== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==26379== Command: ./nachos -cp ../test/num_100.txt /a/b/bf3
+==26379== 
+==26379== 
+==26379== HEAP SUMMARY:
+==26379==     in use at exit: 648 bytes in 2 blocks
+==26379==   total heap usage: 4,615 allocs, 4,613 frees, 276,372 bytes allocated
+==26379== 
+==26379== LEAK SUMMARY:
+==26379==    definitely lost: 0 bytes in 0 blocks
+==26379==    indirectly lost: 0 bytes in 0 blocks
+==26379==      possibly lost: 0 bytes in 0 blocks
+==26379==    still reachable: 648 bytes in 2 blocks
+==26379==         suppressed: 0 bytes in 0 blocks
+==26379== Reachable blocks (those to which a pointer was found) are not shown.
+==26379== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==26379== 
+==26379== For counts of detected and suppressed errors, rerun with: -v
+==26379== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 18 from 8)
+==26380== Memcheck, a memory error detector
+==26380== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==26380== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==26380== Command: ./nachos -lr /
+==26380== 
+/a
+ /b
+  /bf1
+  /bf2
+  /bf3
+==26380== 
+==26380== HEAP SUMMARY:
+==26380==     in use at exit: 648 bytes in 2 blocks
+==26380==   total heap usage: 276 allocs, 274 frees, 30,164 bytes allocated
+==26380== 
+==26380== LEAK SUMMARY:
+==26380==    definitely lost: 0 bytes in 0 blocks
+==26380==    indirectly lost: 0 bytes in 0 blocks
+==26380==      possibly lost: 0 bytes in 0 blocks
+==26380==    still reachable: 648 bytes in 2 blocks
+==26380==         suppressed: 0 bytes in 0 blocks
+==26380== Reachable blocks (those to which a pointer was found) are not shown.
+==26380== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==26380== 
+==26380== For counts of detected and suppressed errors, rerun with: -v
+==26380== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 18 from 8)
+==26381== Memcheck, a memory error detector
+==26381== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==26381== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==26381== Command: ./nachos -rr /a/b
+==26381== 
+==26381== 
+==26381== HEAP SUMMARY:
+==26381==     in use at exit: 648 bytes in 2 blocks
+==26381==   total heap usage: 17,324 allocs, 17,322 frees, 1,000,380 bytes allocated
+==26381== 
+==26381== LEAK SUMMARY:
+==26381==    definitely lost: 0 bytes in 0 blocks
+==26381==    indirectly lost: 0 bytes in 0 blocks
+==26381==      possibly lost: 0 bytes in 0 blocks
+==26381==    still reachable: 648 bytes in 2 blocks
+==26381==         suppressed: 0 bytes in 0 blocks
+==26381== Reachable blocks (those to which a pointer was found) are not shown.
+==26381== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==26381== 
+==26381== For counts of detected and suppressed errors, rerun with: -v
+==26381== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 18 from 8)
+==26382== Memcheck, a memory error detector
+==26382== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==26382== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==26382== Command: ./nachos -lr /
+==26382== 
+/a
+==26382== 
+==26382== HEAP SUMMARY:
+==26382==     in use at exit: 648 bytes in 2 blocks
+==26382==   total heap usage: 227 allocs, 225 frees, 27,060 bytes allocated
+==26382== 
+==26382== LEAK SUMMARY:
+==26382==    definitely lost: 0 bytes in 0 blocks
+==26382==    indirectly lost: 0 bytes in 0 blocks
+==26382==      possibly lost: 0 bytes in 0 blocks
+==26382==    still reachable: 648 bytes in 2 blocks
+==26382==         suppressed: 0 bytes in 0 blocks
+==26382== Reachable blocks (those to which a pointer was found) are not shown.
+==26382== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==26382== 
+==26382== For counts of detected and suppressed errors, rerun with: -v
+==26382== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 18 from 8)

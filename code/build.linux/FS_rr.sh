@@ -1,10 +1,10 @@
-./nachos -f
-./nachos -mkdir /a
-./nachos -mkdir /a/b
-./nachos -cp ../test/num_100.txt /a/b/bf1
-./nachos -cp ../test/num_100.txt /a/b/bf2
-./nachos -cp ../test/num_100.txt /a/b/bf3
-./nachos -lr /
-./nachos -rr /a/b
-./nachos -lr /
+valgrind --leak-check=full ./nachos -f
+valgrind --leak-check=full ./nachos -mkdir /a
+valgrind --leak-check=full ./nachos -mkdir /a/b
+valgrind --leak-check=full ./nachos -cp ../test/num_100.txt /a/b/bf1
+valgrind --leak-check=full ./nachos -cp ../test/num_100.txt /a/b/bf2
+valgrind --leak-check=full ./nachos -cp ../test/num_100.txt /a/b/bf3
+valgrind --leak-check=full ./nachos -lr /
+valgrind --leak-check=full ./nachos -rr /a/b
+valgrind --leak-check=full ./nachos -lr /
 
