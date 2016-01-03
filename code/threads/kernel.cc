@@ -358,7 +358,7 @@ int Kernel::Exec(char* name)
 #ifndef FILESYS_STUB
 int Kernel::KCreateFile(char *filename, int size)
 {
-    return fileSystem->Create(filename, size);
+    return fileSystem->Create(filename, size, FALSE);
 }
 
 OpenFileId Kernel::KOpen(char *name)

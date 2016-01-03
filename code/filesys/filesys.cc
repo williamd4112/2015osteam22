@@ -62,8 +62,10 @@
 // supports extensible files, the directory size sets the maximum number
 // of files that can be loaded onto the disk.
 #define FreeMapFileSize 	(NumSectors / BitsInByte)
-#define NumDirEntries 		10
+#define NumDirEntries 		64 //10
 #define DirectoryFileSize 	(sizeof(DirectoryEntry) * NumDirEntries)
+
+const char *RootDirectoryName = "/";
 
 //----------------------------------------------------------------------
 // FileSystem::FileSystem
@@ -80,7 +82,7 @@
 
 FileSystem::FileSystem(bool format) : fileDescritporIndex(0)
 {
-    DEBUG(dbgFile, "Initializing the file system.");
+    DEBUG(dbgFile, "Initializing the file system. NumSectors = " << NumSectors);
     if (format)
         {
             PersistentBitmap *freeMap = new PersistentBitmap(NumSectors);
@@ -186,7 +188,7 @@ FileSystem::~FileSystem()
 //----------------------------------------------------------------------
 
 bool
-FileSystem::Create(char *name, int initialSize)
+FileSystem::Create(char *name, int initialSize, bool directoryFlag)
 {
     Directory *directory;
     PersistentBitmap *freeMap;
@@ -194,11 +196,16 @@ FileSystem::Create(char *name, int initialSize)
     int sector;
     bool success;
 
-    DEBUG(dbgFile, "Creating file " << name << " size " << initialSize);
-
+    DEBUG(dbgFile, "Creating file type: " << directoryFlag << " " << name << " size " << initialSize);
+    
+    // Force directory size to same
+    if(directoryFlag)
+        initialSize = DirectoryFileSize;
+    
     directory = new Directory(NumDirEntries);
     directory->FetchFrom(directoryFile);
-
+    directory->Find_r(name, NumDirEntries, DirectorySector);
+    
     if (directory->Find(name) != -1)
         success = FALSE;			// file is already in directory
     else
@@ -207,11 +214,11 @@ FileSystem::Create(char *name, int initialSize)
             sector = freeMap->FindAndSet();	// find a sector to hold the file header
             if (sector == -1)
                 success = FALSE;		// no free block for file header
-            else if (!directory->Add(name, sector))
+            else if (!directory->Add(name, sector, directoryFlag))
                 success = FALSE;	// no space in directory
             else
                 {
-                    //printf("Create inode sector #%d: %s\n",sector,name);
+                    printf("Create inode sector #%d: %s\n",sector,name);
                     hdr = new FileHeader;
                     if (!hdr->Allocate(freeMap, initialSize))
                         success = FALSE;	// no space on disk for data
@@ -228,6 +235,18 @@ FileSystem::Create(char *name, int initialSize)
             delete freeMap;
         }
     delete directory;
+    
+    if(directoryFlag)
+    {
+        printf("\tNew directory sector #%d: %s\n",sector,name);
+        Directory *newDirectory = new Directory(NumDirEntries);
+        OpenFile *newDirectoryFile = new OpenFile(sector);
+        newDirectory->WriteBack(newDirectoryFile);
+        
+        delete newDirectory;
+        delete newDirectoryFile;
+    }
+    
     return success;
 }
 
@@ -249,11 +268,14 @@ FileSystem::Open(char *name)
     int sector;
 
     DEBUG(dbgFile, "Opening file" << name);
+    
     directory->FetchFrom(directoryFile);
     sector = directory->Find(name);
     if (sector >= 0)
         openFile = new OpenFile(sector);	// name was found in directory
+
     delete directory;
+
     return openFile;				// return NULL if not found
 }
 
@@ -351,12 +373,32 @@ FileSystem::Remove(char *name)
 //----------------------------------------------------------------------
 
 void
-FileSystem::List()
+FileSystem::List(char *dirName)
 {
-    Directory *directory = new Directory(NumDirEntries);
-    directory->FetchFrom(directoryFile);
-    directory->List();
-    delete directory;
+    Directory *rootDirectory = new Directory(NumDirEntries);
+    rootDirectory->FetchFrom(directoryFile);
+    
+    if(strncmp(dirName, RootDirectoryName, strlen(dirName)) == 0)
+    {
+        rootDirectory->List();
+    }
+    else
+    {
+        int dirSector = rootDirectory->Find_r(dirName, NumDirEntries, DirectorySector);
+        if(dirSector >= 0)
+        {
+            OpenFile *toListDirectoryFile = new OpenFile(dirSector);
+            Directory *directory = new Directory(NumDirEntries);
+            
+            directory->FetchFrom(toListDirectoryFile);
+            directory->List();
+            
+            delete directory;
+            delete toListDirectoryFile;
+        }
+    }
+    
+    delete rootDirectory;
 }
 
 //----------------------------------------------------------------------
@@ -394,6 +436,21 @@ FileSystem::Print()
     delete dirHdr;
     delete freeMap;
     delete directory;
+}
+
+int 
+FileSystem::GetDirectoryFileSize()
+{
+    return DirectoryFileSize;
+}
+
+void 
+FileSystem::GetFileName(char *dest, char *name)
+{
+    int lastSlashPos = strrchr(name, '/') - name;
+    int filenameLen = strlen(name) - lastSlashPos - 1;
+    strncpy(dest, name + lastSlashPos, filenameLen + 1);
+    dest[filenameLen + 1] = '\0';
 }
 
 #endif // FILESYS_STUB

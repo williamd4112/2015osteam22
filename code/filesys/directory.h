@@ -18,6 +18,7 @@
 #define DIRECTORY_H
 
 #include "openfile.h"
+#include "debug.h"
 
 #define FileNameMaxLen 		9	// for simplicity, we assume 
 // file names are <= 9 characters long
@@ -32,6 +33,7 @@
 class DirectoryEntry
 {
 public:
+    bool directoryFlag;
     bool inUse;				// Is this directory entry in use?
     int sector;				// Location on disk to find the
     //   FileHeader for this file
@@ -62,8 +64,9 @@ public:
 
     int Find(char *name);		// Find the sector number of the
     // FileHeader for file: "name"
+    int Find_r(char *name, int numEntries, int rootSector);
 
-    bool Add(char *name, int newSector);  // Add a file name into the directory
+    bool Add(char *name, int newSector, bool directoryFlag);  // Add a file name into the directory
 
     bool Remove(char *name);		// Remove a file from the directory
 

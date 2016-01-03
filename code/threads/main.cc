@@ -99,13 +99,14 @@ Copy(char *from, char *to)
 
 // Create a Nachos file of the same length
     DEBUG('f', "Copying file " << from << " of size " << fileLength <<  " to file " << to);
-    if (!kernel->fileSystem->Create(to, fileLength))     // Create Nachos file
+    if (!kernel->fileSystem->Create(to, fileLength, FALSE))     // Create Nachos file
         {
             printf("Copy: couldn't create output file %s\n", to);
             Close(fd);
             return;
         }
 
+    printf("Copy: open %s\n",to);
     openFile = kernel->fileSystem->Open(to);
     ASSERT(openFile != NULL);
 
@@ -158,7 +159,11 @@ Print(char *name)
 static void
 CreateDirectory(char *name)
 {
-    // MP4 Assignment
+    if(!kernel->fileSystem->Create(name, kernel->fileSystem->GetDirectoryFileSize(), true))
+    {
+        printf("CreateDirectory: couldn't create directory %s\n", name);
+        return;
+    }
 }
 
 //----------------------------------------------------------------------
@@ -344,7 +349,7 @@ main(int argc, char **argv)
         }
     if (dirListFlag)
         {
-            kernel->fileSystem->List();
+            kernel->fileSystem->List(listDirectoryName);
         }
     if (mkdirFlag)
         {

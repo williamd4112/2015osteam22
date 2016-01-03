@@ -90,8 +90,9 @@ public:
     // MP4 mod tag
     ~FileSystem();
 
-    bool Create(char *name, int initialSize);
+    bool Create(char *name, int initialSize, bool directoryFlag);
     // Create a file (UNIX creat)
+    bool CreateDir(char *name);
 
     OpenFile* Open(char *name); 	// Open a file (UNIX open)
     int Read(char *buf, int size, OpenFileId id);
@@ -102,10 +103,10 @@ public:
     
     bool Remove(char *name);  		// Delete a file (UNIX unlink)
 
-    void List();			// List all the files in the file system
+    void List(char *dirName);			// List all the files in the file system
 
     void Print();			// List all the files and their contents
-
+    int GetDirectoryFileSize();
 private:
     OpenFile* freeMapFile;		// Bit map of free disk blocks,
     // represented as a file
@@ -113,6 +114,8 @@ private:
     // file names, represented as a file
     int fileDescritporIndex;
     OpenFile *fileDescriptorTable[MAXOPENFILES];
+    
+    void GetFileName(char *dest, char *name);
     
 };
 

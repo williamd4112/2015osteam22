@@ -66,6 +66,7 @@ public:
     
     FileHeader *GetNextFileHeader(){ return nextFileHeader; }
     int GetNextFileHeaderSector(){ return nextFileHeaderSector; }
+    int GetDirectoryFileSize();
 private:
 
     FileHeader *nextFileHeader;

@@ -118,6 +118,68 @@ Directory::Find(char *name)
     return -1;
 }
 
+int
+Directory::Find_r(char *name, int numEntries, int rootSector)
+{
+    ASSERT(*name == '/'); // must start with '/'
+    
+    char buff[9 + 1]; // by spec, each dir name or file name length is less than 9
+    int len = strlen(name);
+    
+    if(len == 1) // passing "/", return DirectorySector
+    {
+        return rootSector;
+    }
+    else if(len > 1)
+    {
+        printf("To Find %s\n",name);
+        int nextSlashPos;
+        char nextSlashPtr = trchr(name + 1, '/') ;
+        if(nextSlashPtr != NULL)
+        {
+            printf("\t Next slash pos %d\n",nextSlashPos);
+            nextSlashPos = nextSlashPtr - name;
+            strncpy(buff, name, nextSlashPos); // /t1/t2, we cut /t1
+            buff[nextSlashPos] = '\0';
+            name += nextSlashPos;
+            printf("Find(%s) and remain %s\n",buff,name);
+        }
+        else
+        {
+            strncpy(buff, name, len);
+            name += nextSlashPos;
+            printf("Find(%s) and remain %s\n",buff,name);
+        }
+    }
+    
+    for (int i = 0; i < tableSize; i++)
+    {
+        if(table[i].inUse)
+        {
+            if(!strncmp(table[i].name, buff, FileNameMaxLen))
+            {
+                if(*name == '\0') // Reach end
+                    return table[i].sector;
+                else
+                {
+                    OpenFile *dirFile = new OpenFile(table[i].sector);
+                    Directory *dir = new Directory(numEntries);
+                    dir->FetchFrom((dirFile));
+                    
+                    int sector = dir->Find_r(name, numEntries, rootSector);
+                    
+                    delete dirFile;
+                    delete dir;
+                    
+                    return sector;
+                }
+            }
+        }
+    }
+    
+    return -1;
+}
+
 //----------------------------------------------------------------------
 // Directory::Add
 // 	Add a file into the directory.  Return TRUE if successful;
@@ -130,7 +192,7 @@ Directory::Find(char *name)
 //----------------------------------------------------------------------
 
 bool
-Directory::Add(char *name, int newSector)
+Directory::Add(char *name, int newSector, bool directoryFlag)
 {
     if (FindIndex(name) != -1)
         return FALSE;
@@ -138,9 +200,11 @@ Directory::Add(char *name, int newSector)
     for (int i = 0; i < tableSize; i++)
         if (!table[i].inUse)
             {
+                table[i].directoryFlag = directoryFlag;
                 table[i].inUse = TRUE;
                 strncpy(table[i].name, name, FileNameMaxLen);
                 table[i].sector = newSector;
+                printf("Directory::Add(%s)\n",name);
                 return TRUE;
             }
     return FALSE;	// no space.  Fix when we have extensible files.
